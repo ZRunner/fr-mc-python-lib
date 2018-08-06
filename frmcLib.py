@@ -31,18 +31,31 @@ if len(not_loaded_modules)>=1:
 #----- Classes -----#
 class Entity():
     """This class represents an entity, and all information about it"""
-    def __init__(self,Name="",ID="",Type="",PV=0,PA=0,XP=0,Biomes=[],Dimensions=[0,0,0],Version="1.0",Img="",url=""):
-        self.Name = Name  #name of the entity
-        self.ID = ID  #text id
-        self.Type=Type  #type of the entity
-        self.PV = PV  #health points
-        self.PA = PA  #attack points
-        self.XP = XP  #xp droped
-        self.Biomes = Biomes  #favorites biomes
-        self.Dimensions = Dimensions  #dimensions (width, length, height)
-        self.Version = Version  #game version when adding
-        self.Img = Img  #image link
-        self.Url = url  #url of the entity page
+    def __init__(self,Name="",ID="",Type="",PV=0,PA=0,XP=0,Biomes=[],Dimensions=[0,0,0],Version="0.0",Img="",url=""):
+        self.Name = Name  #Name of the entity
+        self.ID = ID  #Text id
+        self.Type=Type  #Type of the entity
+        self.PV = PV  #Health points
+        self.PA = PA  #Attack points
+        self.XP = XP  #HP droped
+        self.Biomes = Biomes  #Favorites biomes
+        self.Dimensions = Dimensions  #Dimensions (width, length, height)
+        self.Version = Version  #Game version when adding
+        self.Img = Img  #Image link
+        self.Url = url  #Url of the entity page
+
+class Item():
+    """This class represent an item or a block. Some information can be empty depending on the type of item (weapon, block...)"""
+    def __init__(self,Name="",ID="",Stack=0,Tab=None,Damage=0,Strength=0,Tool="",Version="0.0",Mobs=[]):
+        self.Name = Name  #Name of the item
+        self.ID = ID  #Text id
+        self.Stack = Stack  #Size of a stack
+        self.CreativeTab = Tab  #Tab in creative gamemode
+        self.Damage = Damage  #>eapon damage
+        self.Strength = Strength  #Durability
+        self.Tool = Tool  #Tool able to destroy it
+        self.Version = Version  #Game version when adding
+        self.Mobs = Mobs  #List of mobs that can drop this item
 
 
 
@@ -117,7 +130,14 @@ List of matching links"""
 
 #----- Entity infos -----#
 def search_entity(data=None,url=None):
-    """Fonction qui récupère toutes les infos sur une entité à partir du code html de sa page, et crée un objet Entity"""
+    """Function that retrieves all information about an entity from the html code of its page, and creates an Entity() object.
+
+Parameters : 
+- data (str): source code of the page, in html (useless if you fill url)
+- url (str): url of the page (useless if you enter data)
+
+Return:
+Object of type Entity()"""
     if type(data) not in [str,None] and type(url) not in [str,None]:
         raise TypeError("data and url must be string or None")
     if data == url == None:
@@ -184,7 +204,7 @@ def search_entity(data=None,url=None):
     if Names != None:
         Names = Names.group(1)
     else:
-        Names = "Introuvable"
+        Names = "Inconnu"
     #-- Final entity --#
     En = Entity(Name=Names,ID="\n".join(IDs),Type=Type,PV=PVs,PA=PAs,XP=XPs,Biomes=Bioms,Dimensions=Dimensions,Version=Vs,Img=img)
     if url != None:
@@ -194,6 +214,85 @@ def search_entity(data=None,url=None):
 
 
 #----- Bloc/item infos -----#
+def search_item(data=None,url=None):
+    """Function that retrieves all information about an item from the html code of its page, and creates an Item() object.
+
+Parameters : 
+- data (str): source code of the page, in html (useless if you fill url)
+- url (str): url of the page (useless if you enter data)
+
+Return:
+Object of type Item()"""
+    if type(data) not in [str,None] and type(url) not in [str,None]:
+        raise TypeError("data and url must be string or None")
+    if data == url == None:
+        raise ValueError("data and url cannot be empty at the same time")
+    if url != None and data == None:
+        data = url_to_data(url)
+    #-- Name --#
+    Names = re.search(r"<div class=\"popnom\">([^<]+)<br /> <em>[^<]+</em></div>",data,re.MULTILINE)
+    if Names != None:
+        Names = Names.group(1)
+    else:
+        Names = "Inconnu"
+    #-- ID --#
+    IDs = list()
+    try:
+        for matchNum,match in enumerate(re.finditer(r"<p class=\"identifiant\"><b>([^<]+)</b>([^<]+)",data,re.MULTILINE)):
+            IDs.append(match.group(1)+" "+match.group(2))
+    except AttributeError:
+        pass
+    #-- Stack --#
+    Stacks = re.search(r"<p>Stackable par (\d+) </p></div>",data,re.MULTILINE)
+    if Stacks != None:
+        Stacks = Stacks.group(1)
+    else:
+        Stacks = 0
+    #-- Tab --#
+    Tabs = re.search(r"</span> ([^<]+)</p>",data,re.MULTILINE)
+    if Tabs != None:
+        Tabs = Tabs.group(1)
+    else:
+        Tabs = None
+    #-- Damage --#
+    Dmgs = re.search(r"Cette arme inflige des dégats: <span class=\"healthbar\"><img src=\"[^\"]+\" style=\"[^\"]+\" alt=\"([\d.]+) [^>]+>",data,re.MULTILINE)
+    if Dmgs != None:
+        Dmgs = Dmgs.group(1)
+    else:
+        Dmgs = None
+    #-- Strength --#
+    Strs = re.search(r"<p>Solidité : Cet objet est utilisable <strong style=\"color: green;\">([\d]+)</strong> fois.</p>",data,re.MULTILINE)
+    if Strs != None:
+        Strs = Strs.group(1)
+    else:
+        Strs = None
+    #-- Tool --#
+    Tools = re.search(r"<a rel=\"popup\" href=\"[^\"]+\" onclick=\"[^\"]+\"  class=\"content_popup_link \">([^>]+)</a></span><br/>",data,re.MULTILINE)
+    if Tools != None:
+        Tools = Tools.group(1)
+    else:
+        Tools = None
+    #-- Version --#
+    try:
+        Vs = re.search(r"<div class=\"version\">[^<]+<br/><[^>]+>([^<]+)</a>",data).group(1)
+    except AttributeError:
+        Vs ="Introuvable"
+    #-- Mobs --#
+    Mobs = list()
+    try:
+        for match in re.finditer(r"<span><a rel=\"popup\" href=\"[^\"]+\" onclick=\"[^}]+} \)\"  class=\"content_popup_link \">([^<]+)</a>",data,re.MULTILINE):
+            if not match.group(1) in Mobs:
+                Mobs.append(match.group(1))
+    except AttributeError:
+        pass
+    #-- Final entity --#
+    Bl = Item(Name=Names,ID=IDs,Stack=Stacks,Tab=Tabs,Damage=Dmgs,Strength=Strs,Tool=Tools,Version=Vs,Mobs=Mobs)
+    if url != None:
+        Bl.Url = url
+    return Bl
+
+
+
 #----- Command infos -----#
 
 
