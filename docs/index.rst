@@ -8,9 +8,8 @@ Welcome to frmcLib's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
-    testlol.rst
+    testlol
     mdr
 
 
