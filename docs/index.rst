@@ -10,7 +10,7 @@ Welcome to frmcLib's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-    testlol
+    testlol.rst
     mdr
 
 
