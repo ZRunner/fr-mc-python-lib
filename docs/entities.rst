@@ -19,4 +19,4 @@ Lol !
 ------------
 Informations
 ------------
-Amazing ! :wave:
+Amazing !
