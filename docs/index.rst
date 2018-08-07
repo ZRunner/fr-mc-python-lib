@@ -6,11 +6,22 @@
 Welcome to frmcLib's documentation!
 ===================================
 
+Here you can find all the explanations about my project, available on Github.
+
+This Python library aims to retrieve all Minecraft® game information from the large database at fr-minecraft.net. Unfortunately this site does not have any API, so the library uses the html code of pages to navigate and do research, in a reasonable time.
+
+Currently not a lot of content is supported by the frmcLib library, but I am constantly working on improving it. You will soon have access to commands, potion effects, progress... but also to tips, maps, wallpapers, and other content posted (in French) on the site. And all this with an amazing facility! A single line of code is enough to retrieve all the information about the Slime, or many other items and entities! 
+
+In addition the other internal functions stay available and well documented, which allows you for example to find all the files corresponding to any word (all the swords of the game for example).
+
+If you want to report bugs or improve the library, feel free to go to the Github page of the project, or to send me an email. 
+
 .. toctree::
    :maxdepth: 2
+   :caption: Contents:
 
-    testlol
-    mdr
+   mdr
+   testlol
 
 
 Indices and tables
