@@ -13,7 +13,10 @@ class MissingLibError(Error):
     def __init__(self,message):
         self.message = message
 
-
+class ItemNotFound(Error):
+    """Raised when an item can't be found"""
+    def __init__(self,message):
+        self.message = message
 
 #----- Import libraries -----#
 not_loaded_modules = list()
@@ -60,6 +63,22 @@ class Item():
 
 
 #----- Useful functions -----#
+def main(name,Type):
+    """General function that allows to generate an object from a simple search.
+
+Parameters:
+- name (str): the name of the item to search for
+- Type (str): the type of item (Entité, Bloc, Item, etc.)
+
+Return:
+Object of type Entity(), Item(), or other"""
+    data = search(name)
+    urls = search_links(data,Type)
+    if len(urls) == 0:
+        raise ItemNotFound("This item can't be found: {} (Type: {})".format(name,Type))
+    item = search_item(url=urls[0])
+    return item
+
 def url_to_data(url):
     """Returns the html string of a site from its url.
 
@@ -102,14 +121,14 @@ def search_links(code,Type=None,limit=1):
 
 Parameters: 
 - code (str): the html string of the search page
-- Type (str): the type of item sought (Entité, Block, Item, Potion, Enchant, Progress, Effect, Success, Command), insensitive case
+- Type (str): the type of item sought (Entité, Bloc, Item, Potion, Enchant, Progress, Effect, Success, Command), insensitive case
 - limit (int): the maximum number of links to return
 
 Return: 
 List of matching links"""
     if type(code) != str or type(Type) != str or type(limit) != int:
         raise TypeError("One of these arguments is not in the right type")
-    if Type not in ["Entité","Block", "Item", "Potion", "Enchant", "Progress", "Effect", "Success", "Command"]:
+    if Type.lower() not in ["entité","bloc", "item", "potion", "enchant", "progrès", "effet", "succès", "commande"]:
         raise ValueError("The given type is not valid : {}".format(Type))
     matches = re.findall(r"<td class='id'><a[^>]+>([^<]+)",code)
     links = re.findall(r"<a href=\"([^\"]+)\"  class=\"content_link \">Voir la fiche complète</a>",code)
@@ -280,7 +299,7 @@ Object of type Item()"""
     #-- Mobs --#
     Mobs = list()
     try:
-        for match in re.finditer(r"<span><a rel=\"popup\" href=\"[^\"]+\" onclick=\"[^}]+} \)\"  class=\"content_popup_link \">([^<]+)</a>",data,re.MULTILINE):
+        for match in re.finditer(r"<img src=\"img/creatures/small/[^\"]+\" alt=\"([^\"]+)\" />",data,re.MULTILINE):
             if not match.group(1) in Mobs:
                 Mobs.append(match.group(1))
     except AttributeError:
