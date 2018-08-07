@@ -20,8 +20,8 @@ If you want to report bugs or improve the library, feel free to go to the Github
    :maxdepth: 2
    :caption: Contents:
 
-   mdr
-   testlol
+   generalities
+   entities
 
 
 Indices and tables
