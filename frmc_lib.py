@@ -34,6 +34,7 @@ if len(not_loaded_modules)>=1:
 #----- Classes -----#
 class Entity():
     """This class represents an entity, and all information about it.
+
 Here is a list of all variables accessible after creation:
 
 .. hlist::
@@ -71,7 +72,28 @@ Parameters
         self.Url = url  #Url of the entity page
 
 class Item():
-    """This class represent an item or a block. Some information can be empty depending on the type of item (weapon, block...)"""
+    """This class represent an item or a block. Some information can be empty depending on the type of item (weapon, block...).
+
+Here is a list of all variables accessible after creation:
+
+.. hlist::
+   :columns: 2
+
+   * Name
+   * ID
+   * Stack
+   * CreativeTab
+   * Damage
+   * Strength
+   * Tool
+   * Version
+   * Mobs
+   
+Parameters
+----------
+    diverses All information that will be stored in the class
+
+.. tip:: Details on each of the information are given in comments in the source code"""
     def __init__(self,Name="",ID="",Stack=0,Tab=None,Damage=0,Strength=0,Tool="",Version="0.0",Mobs=[]):
         self.Name = Name  #Name of the item
         self.ID = ID  #Text id
@@ -206,7 +228,7 @@ Return
 
 #----- Entity infos -----#
 def search_entity(data=None,url=None):
-    """Function that retrieves all information about an entity from the html code of its page, and creates an Entity() object.
+    """Function that retrieves all information about an entity from the html code of its page, and creates an :class:`~frmc_lib.Entity` object.
 
 Parameters
 ----------
@@ -296,7 +318,7 @@ Return
 
 #----- Bloc/item infos -----#
 def search_item(data=None,url=None):
-    """Function that retrieves all information about an item from the html code of its page, and creates an Item() object.
+    """Function that retrieves all information about an item from the html code of its page, and creates an :class:`~frmc_lib.Item` object.
 
 Parameters
 ----------
