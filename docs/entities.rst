@@ -8,7 +8,7 @@
 Entities
 ========
 
-Entities form a significant part of Minecraft's cubic world. That's why this library makes it easy to retrieve much of the information about any entity in the game. From the famous creeper to the orbe of xp, passing through the armor stands and the slimes, you can find their identifiers, their life points, the number of xp dropped to death, a link to an image representing the entity (png)... All taken directly from the site fr-minecraft.net!
+Entities form a significant part of Minecraft's cubic world. That's why this library makes it easy to retrieve much of the information about any entity in the game. From the famous creeper to the orbe of xp, passing through the armor stands and the slimes, you can find their identifiers, their life points, the number of xp dropped to death, a link to an image representing the entity (png)... All taken directly from the site `fr-minecraft.net <https://fr-minecraft.net>`_ !
 
 ---------
 The class
