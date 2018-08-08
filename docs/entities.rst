@@ -20,5 +20,14 @@ The details of this class are explained here:
 How to search
 -------------
 
+using main()
+~~~~~~~~~~~~
+
+.. automodule:: frmc_lib
+	:members: main
+
+using search_entity()
+~~~~~~~~~~~~~~~~~~~~~
+
 .. automodule:: frmc_lib
 	:members: search_entity
