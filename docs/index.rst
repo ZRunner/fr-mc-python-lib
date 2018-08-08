@@ -6,9 +6,9 @@
 Welcome to frmcLib's documentation!
 ===================================
 
-Here you can find all the explanations about my project, available on Github (https://github.com/ZRunner/fr-mc-python-lib)
+Here you can find all the explanations about my project, available on `Github <https://github.com/ZRunner/fr-mc-python-lib>`_.
 
-This Python library aims to retrieve all Minecraft® game information from the large database at fr-minecraft.net. Unfortunately this site does not have any API, so the library uses the html code of pages to navigate and do research, in a reasonable time.
+This Python library aims to retrieve all Minecraft® game information from the large database at `fr-minecraft.net <https://fr-minecraft.net>`_. Unfortunately this site does not have any API, so the library uses the html code of pages to navigate and do research, in a reasonable time.
 
 Currently not a lot of content is supported by the frmcLib library, but I am constantly working on improving it. You will soon have access to commands, potion effects, progress... but also to tips, maps, wallpapers, and other content posted (in French) on the site. And all this with an amazing facility! A single line of code is enough to retrieve all the information about the Slime, or many other items and entities! 
 
