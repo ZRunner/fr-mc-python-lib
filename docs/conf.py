@@ -12,9 +12,9 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+import os
+import sys
+sys.path.insert(0, os.path.abspath('..'))
 
 
 # -- Project information -----------------------------------------------------
@@ -29,6 +29,14 @@ version = '1.0'
 release = '1.0.0a'
 
 
+# Example configuration for intersphinx: refer to the Python standard library.
+import re
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3.6", None),
+    "requests": ("http://docs.python-requests.org/en/master", None),
+    "re": ("https://python.readthedocs.io/en/stable/", None)
+}
+
 # -- General configuration ---------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -39,10 +47,12 @@ release = '1.0.0a'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.doctest',
-    'sphinx.ext.coverage',
-    'sphinx.ext.githubpages',
+    "sphinx.ext.autodoc",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.viewcode",
+    "sphinx.ext.napoleon",
+    "sphinxcontrib.asyncio",
+    "sphinx_autodoc_napoleon_typehints",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -78,7 +88,7 @@ pygments_style = 'sphinx'
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme = 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
