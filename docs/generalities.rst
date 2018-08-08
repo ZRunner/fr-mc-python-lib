@@ -15,7 +15,7 @@ You will also find on this page a summary of each class that can be returned to 
 This library depends on :mod:`regex` library to find the information in the html code, and :mod:`requests` to get the code from each page. 
 
 
-.. note:: All given information come directly from the site fr-minecraft.net
+.. note:: All given information come directly from the site `fr-minecraft.net <https://fr-minecraft.net>`_ !
 
 
 .. warning:: Some information can be empty, depending on the entities: an xp orb will have no dimensions, or life points! 
