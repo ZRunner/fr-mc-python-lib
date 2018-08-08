@@ -104,7 +104,7 @@ This function allows you to retrieve the source code of a web page, from its url
 
 ~~~~~~~~~~~~~~~~~~~~~~~
 Searching item function
-~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
 
 **Syntax**::
 
