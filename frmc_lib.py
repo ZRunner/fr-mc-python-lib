@@ -91,13 +91,14 @@ def main(name,Type):
 
 Parameters
 ----------
-name :class:`str`
+name: :class:`str`
     the name of the item to search for
-Type :class:`str`
+Type: :class:`str`
     the type of item (Entité, Bloc, Item, etc.)
 
 Return
 ------
+    diverses
         Object of type Entity(), Item(), or other"""
     data = search(name)
     urls = search_links(data,Type)
@@ -146,7 +147,8 @@ Parameters
 item :class:`str`
     the name of the item to search. 
 
-Return:
+Return
+------
     :class:`str`
         The url, in string"""
     if type(item) != str:
@@ -159,7 +161,7 @@ def search_links(code,Type=None,limit=1):
     """Search for links from the search page code and return the corresponding links.
 
 Parameters
----------
+----------
 code :class:`str`
     The html string of the search page
 Type :class:`str`
@@ -208,7 +210,7 @@ url: :class:`str`
 
 Return
 ------
-    :class:`~frmcLib.Entity`
+    :class:`~frmc_lib.Entity`
         Object that contains all the information found about this entity"""
     if type(data) not in [str,None] and type(url) not in [str,None]:
         raise TypeError("data and url must be string or None")
