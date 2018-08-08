@@ -1,6 +1,6 @@
 
 #Here are the libraries used by the code:
-libs = ["requests","re"]
+libs = ["requests","regex"]
 
 
 #----- Errors management -----#
@@ -103,7 +103,12 @@ Return
     urls = search_links(data,Type)
     if len(urls) == 0:
         raise ItemNotFound("This item can't be found: {} (Type: {})".format(name,Type))
-    item = search_item(url=urls[0])
+    if Type.lower() in ["bloc","item"]:
+        item = search_item(url=urls[0])
+    elif Type.lower() == "entité":
+        item = search_entity(url=urls[0])
+    else:
+        raise ItemNotFound("The type of this item is not available (Given type: {})".format(Type))
     return item
 
 def url_to_data(url):
@@ -173,8 +178,8 @@ Return
             raise ValueError("The given type is not valid : {}".format(Type))
     if limit<1:
         raise ValueError("The limit must be strictly positive!")
-    matches = re.findall(r"<td class='id'><a[^>]+>([^<]+)",code)
-    links = re.findall(r"<a href=\"([^\"]+)\"  class=\"content_link \">Voir la fiche complète</a>",code)
+    matches = regex.findall(r"<td class='id'><a[^>]+>([^<]+)",code)
+    links = regex.findall(r"<a href=\"([^\"]+)\"  class=\"content_link \">Voir la fiche complète</a>",code)
     results1 = list()
     results2 = list()
     if Type==None:
@@ -215,12 +220,12 @@ Return
     PAs = 0
     #-- Image --#
     try:
-        img = "http://fr-minecraft.net/"+re.search(r"<img src=\"([^\"]+)\" class=\"img\" alt=[^>]+>",data).group(1)
+        img = "http://fr-minecraft.net/"+regex.search(r"<img src=\"([^\"]+)\" class=\"img\" alt=[^>]+>",data).group(1)
     except AttributeError:
         img =  ""
         pass
     #-- PV/PA --#
-    matches = re.finditer(r"<u>(.+)</u>(?:[^>]+)><img[^>]+title=\"([^\"]+)",data,re.MULTILINE)
+    matches = regex.finditer(r"<u>(.+)</u>(?:[^>]+)><img[^>]+title=\"([^\"]+)",data,regex.MULTILINE)
     if matches != None:
         for match in matches:
             if match.group(1)=="Points de vie :":
@@ -230,30 +235,30 @@ Return
     #-- ID --#
     IDs = list()
     try:
-        for matchNum,match in enumerate(re.finditer(r"<p class=\"identifiant\"><b>([^<]+)</b>([^<]+)",data,re.MULTILINE)):
+        for matchNum,match in enumerate(regex.finditer(r"<p class=\"identifiant\"><b>([^<]+)</b>([^<]+)",data,regex.MULTILINE)):
             IDs.append(match.group(1)+" "+match.group(2))
     except AttributeError:
         pass
     #-- Type --#
     try:
-        Type = re.search(r"<u>Type :</u> <span style=\"color: red;\">([^<]+)</span>",data).group(1)
+        Type = regex.search(r"<u>Type :</u> <span style=\"color: red;\">([^<]+)</span>",data).group(1)
     except AttributeError:
         Type = "Inconnu"
         pass
     #-- Dropped xp --#
     try:
-        XPs = re.search(r"<u>Experience :</u> <img [^>]+> (\d)<br/>",data).group(1)
+        XPs = regex.search(r"<u>Experience :</u> <img [^>]+> (\d)<br/>",data).group(1)
     except AttributeError:
         XPs = 0
         pass
     #-- Biomes --#
     Bioms = list()
-    for matchNum,match in enumerate(re.finditer(r"<li><img [^>]+ /> <a [^>]+>([^<]+)</a>",data)):
+    for matchNum,match in enumerate(regex.finditer(r"<li><img [^>]+ /> <a [^>]+>([^<]+)</a>",data)):
         Bioms.append(match.group(1))
     #-- Dimensions --#
     Dimensions = [0,0,0]
     try:
-        r = re.search(r"<div class=\"dimensions\"><[^>]+>Dimensions :</span> <br/>\s*<ul>\s*<li>[^<\d]+([\d|.]+)</li>\s*<li>[^<\d]+([\d|.]+)</li>\s*<li>[^<\d]+([\d|.]+)",data)
+        r = regex.search(r"<div class=\"dimensions\"><[^>]+>Dimensions :</span> <br/>\s*<ul>\s*<li>[^<\d]+([\d|.]+)</li>\s*<li>[^<\d]+([\d|.]+)</li>\s*<li>[^<\d]+([\d|.]+)",data)
         Dimensions = list()
         for group in r.groups():
             Dimensions.append(float(group))
@@ -263,11 +268,11 @@ Return
         Dimensions = [0,0,0]
     #-- Version --#
     try:
-        Vs = re.search(r"<div class=\"version\">[^<]+<br/><[^>]+>([^<]+)</a>",data).group(1)
+        Vs = regex.search(r"<div class=\"version\">[^<]+<br/><[^>]+>([^<]+)</a>",data).group(1)
     except AttributeError:
         Vs ="Introuvable"
     #-- Name --#
-    Names = re.search(r"<h3>(.+)<span>",data,re.MULTILINE)
+    Names = regex.search(r"<h3>(.+)<span>",data,regex.MULTILINE)
     if Names != None:
         Names = Names.group(1)
     else:
@@ -297,7 +302,7 @@ Object of type Item()"""
     if url != None and data == None:
         data = url_to_data(url)
     #-- Name --#
-    Names = re.search(r"<div class=\"popnom\">([^<]+)<br /> <em>[^<]+</em></div>",data,re.MULTILINE)
+    Names = regex.search(r"<div class=\"popnom\">([^<]+)<br /> <em>[^<]+</em></div>",data,regex.MULTILINE)
     if Names != None:
         Names = Names.group(1)
     else:
@@ -305,49 +310,49 @@ Object of type Item()"""
     #-- ID --#
     IDs = list()
     try:
-        for matchNum,match in enumerate(re.finditer(r"<p class=\"identifiant\"><b>([^<]+)</b>([^<]+)",data,re.MULTILINE)):
+        for matchNum,match in enumerate(regex.finditer(r"<p class=\"identifiant\"><b>([^<]+)</b>([^<]+)",data,regex.MULTILINE)):
             IDs.append(match.group(1)+" "+match.group(2))
     except AttributeError:
         pass
     #-- Stack --#
-    Stacks = re.search(r"<p>Stackable par (\d+) </p></div>",data,re.MULTILINE)
+    Stacks = regex.search(r"<p>Stackable par (\d+) </p></div>",data,regex.MULTILINE)
     if Stacks != None:
         Stacks = Stacks.group(1)
     else:
         Stacks = 0
     #-- Tab --#
-    Tabs = re.search(r"</span> ([^<]+)</p>",data,re.MULTILINE)
+    Tabs = regex.search(r"</span> ([^<]+)</p>",data,regex.MULTILINE)
     if Tabs != None:
         Tabs = Tabs.group(1)
     else:
         Tabs = None
     #-- Damage --#
-    Dmgs = re.search(r"Cette arme inflige des dégats: <span class=\"healthbar\"><img src=\"[^\"]+\" style=\"[^\"]+\" alt=\"([\d.]+) [^>]+>",data,re.MULTILINE)
+    Dmgs = regex.search(r"Cette arme inflige des dégats: <span class=\"healthbar\"><img src=\"[^\"]+\" style=\"[^\"]+\" alt=\"([\d.]+) [^>]+>",data,regex.MULTILINE)
     if Dmgs != None:
         Dmgs = Dmgs.group(1)
     else:
         Dmgs = None
     #-- Strength --#
-    Strs = re.search(r"<p>Solidité : Cet objet est utilisable <strong style=\"color: green;\">([\d]+)</strong> fois.</p>",data,re.MULTILINE)
+    Strs = regex.search(r"<p>Solidité : Cet objet est utilisable <strong style=\"color: green;\">([\d]+)</strong> fois.</p>",data,regex.MULTILINE)
     if Strs != None:
         Strs = Strs.group(1)
     else:
         Strs = None
     #-- Tool --#
-    Tools = re.search(r"<a rel=\"popup\" href=\"[^\"]+\" onclick=\"[^\"]+\"  class=\"content_popup_link \">([^>]+)</a></span><br/>",data,re.MULTILINE)
+    Tools = regex.search(r"<a rel=\"popup\" href=\"[^\"]+\" onclick=\"[^\"]+\"  class=\"content_popup_link \">([^>]+)</a></span><br/>",data,regex.MULTILINE)
     if Tools != None:
         Tools = Tools.group(1)
     else:
         Tools = None
     #-- Version --#
     try:
-        Vs = re.search(r"<div class=\"version\">[^<]+<br/><[^>]+>([^<]+)</a>",data).group(1)
+        Vs = regex.search(r"<div class=\"version\">[^<]+<br/><[^>]+>([^<]+)</a>",data).group(1)
     except AttributeError:
         Vs ="Introuvable"
     #-- Mobs --#
     Mobs = list()
     try:
-        for match in re.finditer(r"<img src=\"img/creatures/small/[^\"]+\" alt=\"([^\"]+)\" />",data,re.MULTILINE):
+        for match in regex.finditer(r"<img src=\"img/creatures/small/[^\"]+\" alt=\"([^\"]+)\" />",data,regex.MULTILINE):
             if not match.group(1) in Mobs:
                 Mobs.append(match.group(1))
     except AttributeError:
@@ -361,7 +366,3 @@ Object of type Item()"""
 
 
 #----- Command infos -----#
-
-
-#----- Init -----#
-data = search("sword")
