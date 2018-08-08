@@ -13,7 +13,7 @@ class MissingLibError(Error):
     def __init__(self,message):
         self.message = message
 
-class ItemNotFound(Error):
+class ItemNotFoundError(Error):
     """Raised when an item can't be found"""
     def __init__(self,message):
         self.message = message
@@ -127,13 +127,13 @@ Return
     data = search(name)
     urls = search_links(data,Type)
     if len(urls) == 0:
-        raise ItemNotFound("This item can't be found: {} (Type: {})".format(name,Type))
+        raise ItemNotFoundError("This item can't be found: {} (Type: {})".format(name,Type))
     if Type.lower() in ["bloc","item"]:
         item = search_item(url=urls[0])
     elif Type.lower() == "entité":
         item = search_entity(url=urls[0])
     else:
-        raise ItemNotFound("The type of this item is not available (Given type: {})".format(Type))
+        raise ItemNotFoundError("The type of this item is not available (Given type: {})".format(Type))
     return item
 
 def url_to_data(url):
