@@ -6,7 +6,7 @@
 Welcome to frmcLib's documentation!
 ===================================
 
-Here you can find all the explanations about my project, available on Github.
+Here you can find all the explanations about my project, available on Github (https://github.com/ZRunner/fr-mc-python-lib)
 
 This Python library aims to retrieve all Minecraft® game information from the large database at fr-minecraft.net. Unfortunately this site does not have any API, so the library uses the html code of pages to navigate and do research, in a reasonable time.
 
@@ -21,6 +21,7 @@ If you want to report bugs or improve the library, feel free to go to the Github
    :caption: Contents:
 
    generalities
+   items
    entities
 
 
