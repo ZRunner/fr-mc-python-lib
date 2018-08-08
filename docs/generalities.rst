@@ -90,30 +90,12 @@ Miscellaneous functions
 Url to data
 ~~~~~~~~~~~
 
-**Syntax**::
-
-	url_to_data(url)
-
-This function allows you to retrieve the source code of a web page, from its url address. You just have to give the url as parameter to receive a string containing the html code. 
-
-* Parameters:
-	- url (str): the url of the page
-
-* Return:
-	The html string of the page
+.. automodule:: frmc_lib
+	:members: url_to_data
 
 ~~~~~~~~~~~~~~~~~~~~~~~
 Searching item function
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-**Syntax**::
-
-	search(item)
-
-This function returns the source code of the search page, initialized with a string containing the query. 
-
-* Parameters:
-	- item (str): the name of the item to search. 
-
-* Return:
-	The url, in string
+.. automodule:: frmc_lib
+	:members: search
