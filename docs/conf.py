@@ -30,7 +30,7 @@ release = '1.0.0a'
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
-import re
+import regex
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3.6", None),
     "requests": ("http://docs.python-requests.org/en/master", None),
@@ -115,7 +115,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'frmcLibdoc'
+htmlhelp_basename = 'frmc_libdoc'
 
 
 # -- Options for LaTeX output ------------------------------------------------
