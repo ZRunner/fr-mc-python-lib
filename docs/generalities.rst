@@ -1,10 +1,18 @@
+.. automodule:: frmc_lib
+
+
+.. role:: python(code)
+	:language: python
+
 ============
 Generalities
 ============
 
-Some functions are common to several (or all) classes, and are used to avoid copy and paste in the codes of each class. They are used automatically by the library, especially in the main() function, but you can also use them yourself in your code. 
+Some functions are common to several (or all) classes, and are used to avoid copy and paste in the codes of each class. They are used automatically by the library, especially in the :func:`main` function, but you can also use them yourself in your code. 
 
 You will also find on this page a summary of each class that can be returned to you by the main() function, each corresponding to a type of content (entity, item, command...)
+
+This library depends on :mod:`regex` library to find the information in the html code, and :mod:`requests` to get the code from each page. 
 
 
 .. note:: All given information come directly from the site fr-minecraft.net
@@ -63,37 +71,15 @@ Main function
 -------------
 
 
-**Syntax**::
-
-    main(name,Type)
-
-The main function shortens the information acquisition method. It allows to generate an object from a simple word and a type, without having to execute all the sub-functions. This is probably the function you will use most often for standard library use.
-
-* Parameters:
-	- name (str): the name of the item to search for
-	- Type (str): the type of item, in French (Entité, Bloc, Item, etc.)
-
-* Return:
-	Entity(), Item(), or other object type, depending on the Type given in parameters
+.. automodule:: frmc_lib
+	:members: main
 
 ---------------
 Search function
 ---------------
 
-**Syntax**::
-
-	search_links(code,Type=None,limit=1)
-
-This function allows you to find a certain number of links to item records from the html code of the search page. For example if you want to get the url addresses of all the swords, you have to give in arguments the code of the page https://fr-minecraft.net/recherche.php?search=sword and "Item" in type. 
-You can get several links by changing the value of the limit argument (1 by default)
-
-* Parameters: 
-	- code (str): the html string of the search page
-	- Type (str) (opt): the type of item sought (Entité, Bloc, Item, Potion, Enchant, Progress, Effect, Success, Command), insensitive case. Type=None admits all types
-	- limit (int) (opt): the maximum number of links to return. The limit must be strictly positive
-
-* Return: 
-	List of matching links
+.. automodule:: frmc_lib
+	:members: search_links
 
 
 -----------------------
