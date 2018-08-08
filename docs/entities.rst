@@ -1,4 +1,4 @@
-.. automodule:: frmcLib
+.. automodule:: frmc_lib
 
 
 .. role:: python(code)
@@ -8,12 +8,12 @@
 Entities
 ========
 
-.. automodule:: frmcLib
+.. automodule:: frmc_lib
 	:members: Entity
 
 -------------
 How to search
 -------------
 
-.. automodule:: frmcLib
+.. automodule:: frmc_lib
 	:members: search_entity
