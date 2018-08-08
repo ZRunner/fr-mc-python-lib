@@ -99,3 +99,21 @@ Searching item function
 
 .. automodule:: frmc_lib
 	:members: search
+
+-----------
+Some errors
+-----------
+
+~~~~~~~~~~~~~~~
+MissingLibError
+~~~~~~~~~~~~~~~
+
+.. automodule:: frmc_lib
+	:members: MissingLibError
+
+~~~~~~~~~~~~~~~~~
+ItemNotFoundError
+~~~~~~~~~~~~~~~~~
+
+.. automodule:: frmc_lib
+	:members: ItemNotFoundError
