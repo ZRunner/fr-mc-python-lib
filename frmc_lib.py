@@ -87,7 +87,9 @@ class Item():
 
 #----- Useful functions -----#
 def main(name,Type):
-    """General function that allows to generate an object from a simple search.
+    """The main function shortens the information acquisition method. It allows to generate an object from a simple word \
+and a type, without having to execute all the sub-functions. This is probably the function you will use most often for \
+standard library use.
 
 Parameters
 ----------
@@ -99,7 +101,7 @@ Type: :class:`str`
 Return
 ------
     diverses
-        Object of type Entity(), Item(), or other"""
+        Object of type Entity(), Item() or other, depending on the Type given in parameters"""
     data = search(name)
     urls = search_links(data,Type)
     if len(urls) == 0:
@@ -117,7 +119,7 @@ def url_to_data(url):
 
 Parameters
 ----------
-url :class:`str`
+url: :class:`str`
     the url of the page
 
 Return
@@ -144,7 +146,7 @@ def search(item):
 
 Parameters
 ----------
-item :class:`str`
+item: :class:`str`
     the name of the item to search. 
 
 Return
@@ -158,15 +160,19 @@ Return
     return p
 
 def search_links(code,Type=None,limit=1):
-    """Search for links from the search page code and return the corresponding links.
+    """This function allows you to find a certain number of links to item records from the \
+html code of the search page. For example if you want to get the url addresses \
+of all the swords, you have to give in arguments the code of the page \
+https://fr-minecraft.net/recherche.php?search=sword and "Item" in type. 
+You can get several links by changing the value of the limit argument (1 by default)
 
 Parameters
 ----------
-code :class:`str`
+code: :class:`str`
     The html string of the search page
-Type :class:`str`
+Type: :class:`str`
     The type of item sought (Entité, Bloc, Item, Potion, Enchant, Progress, Effect, Success, Command), insensitive case. Type=None admits all types
-limit :class:`int`
+limit: :class:`int`
     the maximum number of links to return
 
 Return
