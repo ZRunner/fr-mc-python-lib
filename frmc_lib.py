@@ -94,9 +94,9 @@ standard library use.
 Parameters
 ----------
 name: :class:`str`
-    the name of the item to search for
+    The name of the item to search for
 Type: :class:`str`
-    the type of item (Entité, Bloc, Item, etc.)
+    The type of item (Entité, Bloc, Item, etc.)
 
 Return
 ------
@@ -115,17 +115,18 @@ Return
     return item
 
 def url_to_data(url):
-    """Returns the html string of a site from its url.
+    """This function allows you to retrieve the source code of a web page, from its url address. \
+You just have to give the url as parameter to receive a string containing the html code. 
 
 Parameters
 ----------
 url: :class:`str`
-    the url of the page
+    The url of the page
 
 Return
 -------
     :class:`str`
-        the html string of the page
+        The html string of the page
 """
     if type(url) != str:
         raise TypeError("url must be a string")
@@ -142,12 +143,12 @@ Return
 
 #----- Searching functions -----#
 def search(item):
-    """Returns the search page html from the item searched for.
+    """This function returns the source code of the search page, initialized with a string containing the query. 
 
 Parameters
 ----------
 item: :class:`str`
-    the name of the item to search. 
+    The name of the item to search. 
 
 Return
 ------
@@ -173,7 +174,7 @@ code: :class:`str`
 Type: :class:`str`
     The type of item sought (Entité, Bloc, Item, Potion, Enchant, Progress, Effect, Success, Command), insensitive case. Type=None admits all types
 limit: :class:`int`
-    the maximum number of links to return
+    The maximum number of links to return
 
 Return
 ------
@@ -210,9 +211,9 @@ def search_entity(data=None,url=None):
 Parameters
 ----------
 data: :py:class:`str`
-    source code of the page, in html (useless if you fill url)
+    Source code of the page, in html (useless if you fill url)
 url: :class:`str`
-    url of the page (useless if you enter data)
+    Url of the page (useless if you enter data)
 
 Return
 ------
@@ -297,12 +298,17 @@ Return
 def search_item(data=None,url=None):
     """Function that retrieves all information about an item from the html code of its page, and creates an Item() object.
 
-Parameters : 
-- data (str): source code of the page, in html (useless if you fill url)
-- url (str): url of the page (useless if you enter data)
+Parameters
+----------
+data: :class:`str`
+    Source code of the page, in html (useless if you fill url)
+url: :class:`str`
+    Url of the page (useless if you enter data)
 
-Return:
-Object of type Item()"""
+Return
+------
+    :class:`~frmc_lib.Item`
+        Object that contains all the information found about this item/block"""
     if type(data) not in [str,None] and type(url) not in [str,None]:
         raise TypeError("data and url must be string or None")
     if data == url == None:
