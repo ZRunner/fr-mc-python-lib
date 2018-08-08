@@ -1,10 +1,15 @@
+.. automodule:: frmcLib
+
+
+.. role:: python(code)
+	:language: python
+
 ========
 Entities
 ========
 
-Une description de merde
-
-.. warning:: Reeeed !
+.. automodule:: frmcLib
+	:members: Entity
 
 -------------
 How to search
@@ -14,7 +19,8 @@ mdr
 
 .. note:: hey ?
 
-Lol !
+.. automodule:: frmcLib
+	:members: search_entity
 
 ------------
 Informations
