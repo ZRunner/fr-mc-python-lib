@@ -2,4 +2,4 @@
 sphinxcontrib-asyncio
 sphinx_autodoc_napoleon_typehints
 requests==2.19.1
-regex==2.4.144
+regex==2.4
