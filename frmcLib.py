@@ -33,18 +33,41 @@ if len(not_loaded_modules)>=1:
 
 #----- Classes -----#
 class Entity():
-    """This class represents an entity, and all information about it"""
+    """This class represents an entity, and all information about it.
+Here is a list of all variables accessible after creation:
+
+.. hlist::
+   :columns: 2
+
+   * Name
+   * ID
+   * Type
+   * PV
+   * PA
+   * XP
+   * Biomes
+   * Dimensions
+   * Version
+   * Image
+   * Url
+   
+Parameters
+----------
+    diverses All information that will be stored in the class
+
+.. tip:: Details on each of the information are given in comments in the source code
+"""
     def __init__(self,Name="",ID="",Type="",PV=0,PA=0,XP=0,Biomes=[],Dimensions=[0,0,0],Version="0.0",Img="",url=""):
         self.Name = Name  #Name of the entity
         self.ID = ID  #Text id
-        self.Type=Type  #Type of the entity
+        self.Type = Type  #Type of the entity
         self.PV = PV  #Health points
         self.PA = PA  #Attack points
         self.XP = XP  #HP droped
         self.Biomes = Biomes  #Favorites biomes
         self.Dimensions = Dimensions  #Dimensions (width, length, height)
         self.Version = Version  #Game version when adding
-        self.Img = Img  #Image link
+        self.Image = Img  #Image link
         self.Url = url  #Url of the entity page
 
 class Item():
@@ -66,12 +89,16 @@ class Item():
 def main(name,Type):
     """General function that allows to generate an object from a simple search.
 
-Parameters:
-- name (str): the name of the item to search for
-- Type (str): the type of item (Entité, Bloc, Item, etc.)
+Parameters
+----------
+name :class:`str`
+    the name of the item to search for
+Type :class:`str`
+    the type of item (Entité, Bloc, Item, etc.)
 
-Return:
-Object of type Entity(), Item(), or other"""
+Return
+------
+        Object of type Entity(), Item(), or other"""
     data = search(name)
     urls = search_links(data,Type)
     if len(urls) == 0:
@@ -82,11 +109,15 @@ Object of type Entity(), Item(), or other"""
 def url_to_data(url):
     """Returns the html string of a site from its url.
 
-Parameters:
-- url (str): the url of the page
+Parameters
+----------
+url :class:`str`
+    the url of the page
 
-Return:
-the html string of the page
+Return
+-------
+    :class:`str`
+        the html string of the page
 """
     if type(url) != str:
         raise TypeError("url must be a string")
@@ -105,11 +136,14 @@ the html string of the page
 def search(item):
     """Returns the search page html from the item searched for.
 
-Parameters:
-- item (str): the name of the item to search. 
+Parameters
+----------
+item :class:`str`
+    the name of the item to search. 
 
 Return:
-The url, in string"""
+    :class:`str`
+        The url, in string"""
     if type(item) != str:
         raise TypeError("item must be a string")
     p = "http://fr-minecraft.net/recherche.php?search="+"+".join(item.split(" "))
@@ -119,23 +153,32 @@ The url, in string"""
 def search_links(code,Type=None,limit=1):
     """Search for links from the search page code and return the corresponding links.
 
-Parameters: 
-- code (str): the html string of the search page
-- Type (str): the type of item sought (Entité, Bloc, Item, Potion, Enchant, Progress, Effect, Success, Command), insensitive case
-- limit (int): the maximum number of links to return
+Parameters
+---------
+code :class:`str`
+    The html string of the search page
+Type :class:`str`
+    The type of item sought (Entité, Bloc, Item, Potion, Enchant, Progress, Effect, Success, Command), insensitive case. Type=None admits all types
+limit :class:`int`
+    the maximum number of links to return
 
-Return: 
-List of matching links"""
-    if type(code) != str or type(Type) != str or type(limit) != int:
+Return
+------
+    :class:`list`
+        List of matching links"""
+    if type(code) != str or type(Type) not in [str,None] or type(limit) != int:
         raise TypeError("One of these arguments is not in the right type")
-    if Type.lower() not in ["entité","bloc", "item", "potion", "enchant", "progrès", "effet", "succès", "commande"]:
-        raise ValueError("The given type is not valid : {}".format(Type))
+    if Type != None:
+        if Type.lower() not in ["entité","bloc", "item", "potion", "enchant", "progrès", "effet", "succès", "commande"]:
+            raise ValueError("The given type is not valid : {}".format(Type))
+    if limit<1:
+        raise ValueError("The limit must be strictly positive!")
     matches = re.findall(r"<td class='id'><a[^>]+>([^<]+)",code)
     links = re.findall(r"<a href=\"([^\"]+)\"  class=\"content_link \">Voir la fiche complète</a>",code)
     results1 = list()
     results2 = list()
     if Type==None:
-        return links
+        return links[limit:]
     else:
         for e,m in enumerate(matches):
             if m.lower() == Type.lower() and len(results1)<limit:
@@ -151,12 +194,17 @@ List of matching links"""
 def search_entity(data=None,url=None):
     """Function that retrieves all information about an entity from the html code of its page, and creates an Entity() object.
 
-Parameters : 
-- data (str): source code of the page, in html (useless if you fill url)
-- url (str): url of the page (useless if you enter data)
+Parameters
+----------
+data: :py:class:`str`
+    source code of the page, in html (useless if you fill url)
+url: :class:`str`
+    url of the page (useless if you enter data)
 
-Return:
-Object of type Entity()"""
+Return
+------
+    :class:`~frmcLib.Entity`
+        Object that contains all the information found about this entity"""
     if type(data) not in [str,None] and type(url) not in [str,None]:
         raise TypeError("data and url must be string or None")
     if data == url == None:
