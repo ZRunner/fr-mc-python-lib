@@ -1,4 +1,3 @@
-pip install --upgrade pip
 -i https://pypi.org/simple
 sphinxcontrib-asyncio
 sphinx_autodoc_napoleon_typehints
