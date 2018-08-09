@@ -24,6 +24,7 @@ If you want to report bugs or improve the library, feel free to go to the `Githu
    items
    entities
    cmds
+   adv
 
 
 Indices and tables
