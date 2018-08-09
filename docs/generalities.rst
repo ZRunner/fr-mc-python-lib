@@ -72,7 +72,24 @@ This class represent a command (sometimes also called *cheat*). Here is the very
 
 * Some examples to understand the use
 
-* he version of the game where the item was added
+* The version of the game where the item was added
+
+
+~~~~~~~~~~~
+Advancement
+~~~~~~~~~~~
+
+This class represents an advancement, the event that replaces achievements since Minecraft Java Edition 1.12. For those who are lazy enough to click on the word :class:`~frmc_lib.Advancement`, here is a list of information retrieved by the library :  
+
+* The name of the advancement
+
+* The type of the advancement (Progrès/Objectif)
+
+* The previous and next advancement(s) in the Tree structure
+
+* The url of the advancement page
+
+* and some other information
 
 
 -------------
@@ -116,12 +133,17 @@ Miscellaneous constants
 
 .. note:: These constants will probably never be useful to you; nevertheless they are an integral part of the library, so I preferred to indicate them here.
 
+.. automodule:: frmc_lib
+	:members: regex_version
+
 **regex_version:** The regex string used to retrieve the item version (one of the few that are common to almost all items)
 
 .. code-block:: python
 
     regex_version = r'<div class=\"version\">[^<]+<br/>\s*<[^>]+>\s*([^<\n\r]+)\s*</a>'
 
+.. automodule:: frmc_lib
+	:members: timeout
 
 **timeout:** When searching for the html version of a page, this is the maximum time, in seconds, the program waits before raising an exception :class:`requests.exceptions.Timeout`
 
