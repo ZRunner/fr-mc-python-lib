@@ -64,7 +64,16 @@ This class represents an item or a block. As for the other classes, you will fin
 Command
 ~~~~~~~
 
-Oh please, be patient....
+This class represent a command (sometimes also called *cheat*). Here is the very long list of all available information : 
+
+* The name of the command (the thing right after the slash)
+
+* Syntax, in the form of a list of parameters
+
+* Some examples to understand the use
+
+* he version of the game where the item was added
+
 
 -------------
 Main function
@@ -100,6 +109,26 @@ Searching item function
 .. automodule:: frmc_lib
 	:members: search
 
+
+-----------------------
+Miscellaneous constants
+-----------------------
+
+.. note:: These constants will probably never be useful to you; nevertheless they are an integral part of the library, so I preferred to indicate them here.
+
+**regex_version:** The regex string used to retrieve the item version (one of the few that are common to almost all items)
+
+.. code-block:: python
+
+    regex_version = r'<div class=\"version\">[^<]+<br/>\s*<[^>]+>\s*([^<\n\r]+)\s*</a>'
+
+
+**timeout:** When searching for the html version of a page, this is the maximum time, in seconds, the program waits before raising an exception :class:`requests.exceptions.Timeout`
+
+.. code-block:: python
+
+    timeout = 5
+
 -----------
 Some errors
 -----------
@@ -117,3 +146,10 @@ ItemNotFoundError
 
 .. automodule:: frmc_lib
 	:members: ItemNotFoundError
+
+~~~~~~~~~~~~~~
+WrongDataError
+~~~~~~~~~~~~~~
+
+.. automodule:: frmc_lib
+	:members: WrongDataError
