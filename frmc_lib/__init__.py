@@ -1,7 +1,16 @@
 # -*- coding: utf-8 -*-
 
 """
-Hey I'm a test
+Fr-minecraft'Lib
+~~~~~~~~~~~~~~~~
+
+This Python library aims to retrieve all Minecraft® game information from the \
+large database at fr-minecraft.net. Unfortunately this site does not have any API, \
+so the library uses the html code of pages to navigate and do research, in a reasonable time.
+
+:copyright: (c) 2018 ZRunner
+:license: MIT, see LICENSE file for more details.
+
 """
 
 
