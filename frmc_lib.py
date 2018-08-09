@@ -158,7 +158,13 @@ Type: :class:`str`
 Return
 ------
     diverses
-        Object of type Entity(), Item() or other, depending on the Type given in parameters"""
+        Object of type Entity(), Item() or other, depending on the Type given in parameters
+
+Raises
+------
+    :class:`~frmc_lib.ItemNotFoundError`
+        The type of the given item is not available yet, or the given item can't be found
+"""
     data = search(name)
     urls = search_links(data,Type)
     if len(urls) == 0:
@@ -183,9 +189,14 @@ url: :class:`str`
     The url of the page
 
 Return
--------
+------
     :class:`str`
         The html string of the page
+
+Raises
+------
+    :class:`TypeError`
+        The url must be a string.
 """
     if type(url) != str:
         raise TypeError("url must be a string")
@@ -212,7 +223,13 @@ item: :class:`str`
 Return
 ------
     :class:`str`
-        The url, in string"""
+        The url, in string
+
+Raises
+------
+    :class:`TypeError`
+        The given item must be a string
+    """
     if type(item) != str:
         raise TypeError("item must be a string")
     p = "http://fr-minecraft.net/recherche.php?search="+"+".join(item.split(" "))
@@ -238,7 +255,16 @@ limit: :class:`int`
 Return
 ------
     :class:`list`
-        List of matching links"""
+        List of matching links
+
+Raises
+------
+    :class:`TypeError`
+        One of these arguments is not in the right type. Please check that :code:`code` is a :class:`str`, :code:`Type` is a :class:`str` or \
+        :class:`None, and :code:`limit` an :class:`int`.
+    :class:`ValueError`
+        The given type is not valid, or the limit isn't strictly positive.
+    """
     if type(code) != str or type(Type) not in [str,None] or type(limit) != int:
         raise TypeError("One of these arguments is not in the right type")
     if Type != None:
@@ -277,7 +303,15 @@ url: :class:`str`
 Return
 ------
     :class:`~frmc_lib.Entity`
-        Object that contains all the information found about this entity"""
+        Object that contains all the information found about this entity
+
+Raises
+------
+    :class:`TypeError`
+        Data and url must be string or None
+    :class:`ValueError`
+        Data and url cannot be empty at the same time
+        """
     if type(data) not in [str,None] and type(url) not in [str,None]:
         raise TypeError("data and url must be string or None")
     if data == url == None:
@@ -367,7 +401,15 @@ url: :class:`str`
 Return
 ------
     :class:`~frmc_lib.Item`
-        Object that contains all the information found about this item/block"""
+        Object that contains all the information found about this item/block
+
+Raises
+------
+    :class:`TypeError`
+        Data and url must be string or None
+    :class:`ValueError`
+        Data and url cannot be empty at the same time
+"""
     if type(data) not in [str,None] and type(url) not in [str,None]:
         raise TypeError("data and url must be string or None")
     if data == url == None:
@@ -453,7 +495,17 @@ url: :class:`str`
 Return
 ------
     :class:`~frmc_lib.Command`
-        Object that contains all the information found about this command"""
+        Object that contains all the information found about this command
+
+Raises
+------
+    :class:`TypeError`
+        Data and url must be string or None
+    :class:`ValueError`
+        Data and url cannot be empty at the same time
+    :class:`~frmc_lib.WrongDataError`
+        Unable to find the syntax of this command. Please check the given data/url
+"""
     if type(data) not in [str,None] and type(url) not in [str,None]:
         raise TypeError("data and url must be string or None")
     if data == url == None:
