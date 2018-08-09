@@ -16,6 +16,8 @@ In addition the other internal functions stay available and well documented, whi
 
 If you want to report bugs or improve the library, feel free to go to the `Github page <https://github.com/ZRunner/fr-mc-python-lib>`_ of the project, or to send me an email. 
 
+**If you want to install this library**, just enter :code:`pip3 install git+https://github.com/ZRunner/fr-mc-python-lib` in a terminal, then :code:`import frmc_lib` in your python file.
+
 .. toctree::
    :maxdepth: 2
    :caption: Available contents:
