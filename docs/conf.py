@@ -26,7 +26,7 @@ author = 'ZRunner'
 # The short X.Y version
 version = '1.0'
 # The full version, including alpha/beta/rc tags
-release = '1.0.0a'
+release = '1.0.1'
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
@@ -34,7 +34,7 @@ import regex
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3.6", None),
     "requests": ("http://docs.python-requests.org/en/master", None),
-    "regex": ("https://docs.python.org/3.6/library/re.html", None)
+    "regex": ("https://docs.python.org/3.6/library", None)
 }
 
 # -- General configuration ---------------------------------------------------
