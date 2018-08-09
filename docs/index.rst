@@ -14,7 +14,7 @@ Currently not a lot of content is supported by the frmcLib library, but I am con
 
 In addition the other internal functions stay available and well documented, which allows you for example to find all the files corresponding to any word (all the swords of the game for example).
 
-If you want to report bugs or improve the library, feel free to go to the Github page of the project, or to send me an email. 
+If you want to report bugs or improve the library, feel free to go to the `Github page <https://github.com/ZRunner/fr-mc-python-lib>`_ of the project, or to send me an email. 
 
 .. toctree::
    :maxdepth: 2
@@ -23,6 +23,7 @@ If you want to report bugs or improve the library, feel free to go to the Github
    generalities
    items
    entities
+   cmds
 
 
 Indices and tables
