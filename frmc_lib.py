@@ -70,7 +70,7 @@ Parameters
 
 .. tip:: Details on each of the information are given in comments in the source code
 """
-    def __init__(self,Name="",ID="",Type="",PV=0,PA=0,XP=0,Biomes=[],Dimensions=[0,0,0],Version="0.0",Img="",url=""):
+    def __init__(self,Name,ID,Type,PV,PA,XP,Biomes,Dimensions,Version,Img,url=""):
         self.Name = Name  #Name of the entity
         self.ID = ID  #Text id
         self.Type = Type  #Type of the entity
@@ -100,13 +100,14 @@ Here is a list of all variables accessible after creation:
    * Tool
    * Version
    * Mobs
+   * Url
    
 Parameters
 ----------
     diverses All information that will be stored in the class
 
 .. tip:: Details on each of the information are given in comments in the source code"""
-    def __init__(self,Name="",ID="",Stack=0,Tab=None,Damage=0,Strength=0,Tool="",Version="0.0",Mobs=[]):
+    def __init__(self,Name,ID,Stack,Tab,Damage,Strength,Tool,Version,Mobs,Url=""):
         self.Name = Name  #Name of the item
         self.ID = ID  #Text id
         self.Stack = Stack  #Size of a stack
@@ -116,6 +117,7 @@ Parameters
         self.Tool = Tool  #Tool able to destroy it
         self.Version = Version  #Game version when adding
         self.Mobs = Mobs  #List of mobs that can drop this item
+        self.Url = Url  #Url of the item page
 
 class Command():
     """This class represent a command (sometimes also called *cheat*).
@@ -135,11 +137,46 @@ Parameters
     diverses All information that will be stored in the class
 
 .. tip:: Details on each of the information are given in comments in the source code"""
-    def __init__(self,Name="",Syntax=[],Ex=[],Version="0.0"):
+    def __init__(self,Name,Syntax,Ex,Version,Url):
         self.Name = Name  #Name of the command
         self.Syntax = Syntax  #List of parameters, sorted in order of use
         self.Examples = Ex  #List of some examples, contained in tuples in the form (syntax, explanation)
         self.Version = Version  #Game version when adding
+        self.Url = Url  #Url of the command page
+
+class Advancement():
+    """This class represents an advancement, the event that replaces achievements since Minecraft Java Edition 1.12.
+
+Here is the list of information that can be obtained after creating the object:
+
+.. hlist::
+    :columns: 1
+
+    * Name
+    * ID
+    * Type
+    * Action
+    * Parent
+    * Children
+    * Version
+    * Url
+
+Parameters
+----------
+    diverses All information that will be stored in the class
+
+.. tip:: Details on each of the information are given in comments in the source code
+"""
+    def __init__(self,Name,ID,Type,Action,Parent,Children,Version,Url=""):
+        self.Name = Name  #Name of the advancement
+        self.ID = ID  #Text identifier
+        self.Type = Type  #Type of the advancement (Progrès/Objectif)
+        self.Action = Action  #description of the advancement (fr)
+        self.Parent = Parent  #Previous advancement in the Tree structure
+        self.Children = Children  #List of next advancement(s) in the Tree structure
+        self.Version = Version  #Game version when adding
+        self.Url = Url  #Url of the advancement page
+
 
 
 #----- Useful functions -----#
@@ -175,6 +212,8 @@ Raises
         item = search_entity(url=urls[0])
     elif Type.lower() == "commande":
         item = search_cmd(url=urls[0])
+    elif Type.lower() == "progrès":
+        item = search_adv(url=urls[0])
     else:
         raise ItemNotFoundError("The type of this item is not available (Given type: {})".format(Type))
     return item
@@ -345,7 +384,7 @@ Raises
     try:
         Type = regex.search(r"<u>Type :</u> <span style=\"color: red;\">([^<]+)</span>",data).group(1)
     except AttributeError:
-        Type = "Inconnu"
+        Type = ""
         pass
     #-- Dropped xp --#
     try:
@@ -372,13 +411,13 @@ Raises
     try:
         Vs = regex.search(regex_version,data).group(1)
     except AttributeError:
-        Vs ="Introuvable"
+        Vs =""
     #-- Name --#
     Names = regex.search(r"<h3>(.+)<span>",data,regex.MULTILINE)
     if Names != None:
         Names = Names.group(1)
     else:
-        Names = "Inconnu"
+        Names = ""
     #-- Final entity --#
     En = Entity(Name=Names,ID="\n".join(IDs),Type=Type,PV=PVs,PA=PAs,XP=XPs,Biomes=Bioms,Dimensions=Dimensions,Version=Vs,Img=img)
     if url != None:
@@ -421,7 +460,7 @@ Raises
     if Names != None:
         Names = Names.group(1)
     else:
-        Names = "Inconnu"
+        Names = ""
     #-- ID --#
     IDs = list()
     try:
@@ -464,7 +503,7 @@ Raises
         #Vs = regex.search(r"<div class=\"version\">[^<]+<br/><[^>]+>([^<]+)</a>",data).group(1)
         Vs = regex.search(regex_version,data).group(1)
     except AttributeError:
-        Vs ="Introuvable"
+        Vs =""
     #-- Mobs --#
     Mobs = list()
     try:
@@ -537,9 +576,89 @@ Raises
     try:
         Vs = regex.search(regex_version,data).group(1)
     except AttributeError:
-        Vs ="Introuvable"
+        Vs =""
     #-- Final command --#
     Cm = Command(Name=Names,Syntax=Syntaxs,Ex=Examples,Version=Vs)
     if url != None:
-        Cm.url = url
+        Cm.Url = url
     return Cm
+
+
+
+#----- Advancement infos -----#
+def search_adv(data=None,url=None):
+    """Function that retrieves all information about an advancement from the html code of its page, and creates an :class:`~frmc_lib.Advancement` object.
+
+Parameters
+----------
+data: :py:class:`str`
+    Source code of the page, in html (useless if you fill url)
+url: :class:`str`
+    Url of the page (useless if you enter data)
+
+Return
+------
+    :class:`~frmc_lib.Advancement`
+        Object that contains all the information found about this command
+
+Raises
+------
+    :class:`TypeError`
+        Data and url must be string or None
+    :class:`ValueError`
+        Data and url cannot be empty at the same time
+"""
+    if type(data) not in [str,None] and type(url) not in [str,None]:
+        raise TypeError("data and url must be string or None")
+    if data == url == None:
+        raise ValueError("data and url cannot be empty at the same time")
+    if url != None and data == None:
+        data = url_to_data(url)
+    data2 = data.replace("\r\n        ","")
+    #-- Name --#
+    try:
+        Names = regex.search(r'<div class=\"popnom\">([^<]+)<br />',data).group(1)
+    except:
+        Names = ""
+    #-- ID --#
+    try:
+        IDs = regex.search(r'<div class=\"popid\">ID : <strong>([^<]+)</strong></div>',data).group(1)
+    except:
+        IDs = ""
+    #-- Type --#
+    try:
+        Ts = regex.search(r'<u>Type :</u> <span [^>]+>([^<]+)</span><br/>',data).group(1)
+    except:
+        Ts = ""
+    #-- Action --#
+    try:
+        act = regex.search(r"<br><u>Action pour débloquer ce progrès :</u><br/>\s*<span class='news-content'>([^\n]+)",data2).group(1)
+        Actions = act
+        for m in regex.finditer(r'<[^>]+>',act):
+            Actions = Actions.replace(m.group(0),'')
+        Actions = Actions.replace("\r","").replace("\n","")
+    except:
+        Actions = ""
+    #-- Parent --#
+    try:
+        Ps = regex.search(r"<u>Pour d.bloquer ce progrès, il vous faudra :</u>\s*<a rel=\"popup\" href=\"[^\"]+\" onclick=\"return hs\.htmlExpand\(this, { objectType: 'ajax', minWidth: '700', headingText: 'Progrès - ([^\']+)'} \)\"  class=\"content_popup_link \"> ",data2).group(1).rstrip()
+    except:
+        Ps = ""
+    #-- Children --#
+    Cs = list()
+    try:
+        c = regex.search(r"(?<=<u>Succès débloqués par ce progrès :</u><br/>)\s*<ul>(?:\s*<li><a[^>]+>\s*<div[^>]+>\s*<img[^>]+>\s*</div> [^<]+</a></li>)*",data2).group(0)
+        #for m in regex.finditer(r"> ([^<]+)<",c):
+        for m in regex.finditer(r'> ([^<]+[^\s])<',c):
+            Cs.append(m.group(1))
+    except:
+        pass
+    #-- Version --#
+    try:
+        Vs = regex.search(regex_version,data).group(1)
+    except AttributeError:
+        Vs =""
+    Ad = Advancement(Name=Names,ID=IDs,Type=Ts,Action=Actions,Parent=Ps,Children=Cs,Version=Vs)
+    if url != None:
+        Ad.Url = url
+    return Ad
