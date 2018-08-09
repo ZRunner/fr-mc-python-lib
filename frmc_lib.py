@@ -3,6 +3,13 @@
 libs = ["requests","regex"]
 
 
+
+#----- Some useful data -----#
+regex_version = r'<div class=\"version\">[^<]+<br/>\s*<[^>]+>\s*([^<\n\r]+)\s*</a>'
+timeout = 5
+
+
+
 #----- Errors management -----#
 class Error(Exception):
     """Base class for exceptions in this module."""
@@ -15,6 +22,11 @@ class MissingLibError(Error):
 
 class ItemNotFoundError(Error):
     """Raised when an item can't be found"""
+    def __init__(self,message):
+        self.message = message
+        
+class WrongDataError(Error):
+    """Raised when there is an error during parsing data"""
     def __init__(self,message):
         self.message = message
 
@@ -105,6 +117,29 @@ Parameters
         self.Version = Version  #Game version when adding
         self.Mobs = Mobs  #List of mobs that can drop this item
 
+class Command():
+    """This class represent a command (sometimes also called *cheat*).
+
+Here is a very long list of the immensity of the hundreds of information accessible after creation (yes there are only 4, it's not a bug)
+
+.. hlist::
+   :columns: 1
+
+   * Name
+   * Syntax
+   * Examples
+   * Version
+   
+Parameters
+----------
+    diverses All information that will be stored in the class
+
+.. tip:: Details on each of the information are given in comments in the source code"""
+    def __init__(self,Name="",Syntax=[],Ex=[],Version="0.0"):
+        self.Name = Name  #Name of the command
+        self.Syntax = Syntax  #List of parameters, sorted in order of use
+        self.Examples = Ex  #List of some examples, contained in tuples in the form (syntax, explanation)
+        self.Version = Version  #Game version when adding
 
 
 #----- Useful functions -----#
@@ -132,6 +167,8 @@ Return
         item = search_item(url=urls[0])
     elif Type.lower() == "entité":
         item = search_entity(url=urls[0])
+    elif Type.lower() == "commande":
+        item = search_cmd(url=urls[0])
     else:
         raise ItemNotFoundError("The type of this item is not available (Given type: {})".format(Type))
     return item
@@ -153,9 +190,9 @@ Return
     if type(url) != str:
         raise TypeError("url must be a string")
     try:
-        data = requests.get(url,timeout=5).text
+        data = requests.get(url,timeout=timeout).text
     except UnicodeDecodeError:
-        data = requests.get(url).content.decode("utf-8")
+        data = requests.get(url,timeout=timeout).content.decode("utf-8")
     except Exception as exc:
         print("Error while converting the url \"{}\" to data:".format(url))
         raise exc
@@ -299,7 +336,7 @@ Return
         Dimensions = [0,0,0]
     #-- Version --#
     try:
-        Vs = regex.search(r"<div class=\"version\">[^<]+<br/><[^>]+>([^<]+)</a>",data).group(1)
+        Vs = regex.search(regex_version,data).group(1)
     except AttributeError:
         Vs ="Introuvable"
     #-- Name --#
@@ -382,7 +419,8 @@ Return
         Tools = None
     #-- Version --#
     try:
-        Vs = regex.search(r"<div class=\"version\">[^<]+<br/><[^>]+>([^<]+)</a>",data).group(1)
+        #Vs = regex.search(r"<div class=\"version\">[^<]+<br/><[^>]+>([^<]+)</a>",data).group(1)
+        Vs = regex.search(regex_version,data).group(1)
     except AttributeError:
         Vs ="Introuvable"
     #-- Mobs --#
@@ -402,3 +440,54 @@ Return
 
 
 #----- Command infos -----#
+def search_cmd(data=None,url=None):
+    """Function that retrieves all information about a command from the html code of its page, and creates an :class:`~frmc_lib.Command` object.
+
+Parameters
+----------
+data: :py:class:`str`
+    Source code of the page, in html (useless if you fill url)
+url: :class:`str`
+    Url of the page (useless if you enter data)
+
+Return
+------
+    :class:`~frmc_lib.Command`
+        Object that contains all the information found about this command"""
+    if type(data) not in [str,None] and type(url) not in [str,None]:
+        raise TypeError("data and url must be string or None")
+    if data == url == None:
+        raise ValueError("data and url cannot be empty at the same time")
+    if url != None and data == None:
+        data = url_to_data(url)
+    #-- Syntax --#
+    c1 = regex.search(r"(?<=Syntaxe : <b>)([^<]+)(?:.|\n)+(?=</span>\s{9}<a class=\"legende-bouton\")",data.replace("\r\n        ","         "),regex.MULTILINE)
+    if c1 != None:
+        Syntaxs = list()
+        s = c1.group(0)
+        Names = c1.group(1).replace("/","")
+        for m in regex.finditer(r'<[^>]+>',c1.group(0)):
+            s = s.replace(m.group(0),'')
+        s = s.replace("&lt;","<").replace("&gt;",">")
+        s = s.split("         ")
+        for i in s:
+            if len(i)>0:
+                Syntaxs.append(i)
+    else:
+        raise WrongDataError("Unable to find the syntax of this command")
+    #-- Examples --#
+    Examples = list()
+    for m in regex.finditer(r"<textarea class=\"input-exemple\">([^<]+)</textarea><br/>([^<]+)(?:<a[^>]+>([^<]+))?",data):
+        syn = m.group(1)
+        ex = m.group(2)+m.group(3) if m.group(3)!=None else m.group(2)
+        Examples.append((syn,ex))
+    #-- Version --#
+    try:
+        Vs = regex.search(regex_version,data).group(1)
+    except AttributeError:
+        Vs ="Introuvable"
+    #-- Final command --#
+    Cm = Command(Name=Names,Syntax=Syntaxs,Ex=Examples,Version=Vs)
+    if url != None:
+        Cm.url = url
+    return Cm
