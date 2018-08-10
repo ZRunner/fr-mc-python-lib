@@ -2,4 +2,4 @@
 A Python 3 library that allows you to retrieve Minecraft® game information from the fr-minecraft.net website
 
 
-*Documentation (WIP): https://frmc-lib.readthedocs.io*
+*All the documentation can be find here: https://frmc-lib.readthedocs.io*
