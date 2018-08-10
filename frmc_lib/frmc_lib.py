@@ -36,7 +36,7 @@ for m in libs:
     try:
         exec("import "+m)
     except ModuleNotFoundError:
-        print("The {} module has not been installed on your computer".format(m))
+        print("Module *{}* has not been installed on your computer".format(m))
         not_loaded_modules.append(m)
 if len(not_loaded_modules)>=1:
     raise MissingLibError("{} missing module(s)".format(len(not_loaded_modules)))
