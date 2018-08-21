@@ -36,7 +36,7 @@ for m in libs:
     try:
         exec("import "+m)
     except ModuleNotFoundError:
-        print("Module *{}* has not been installed on your computer".format(m))
+        print("The {} module has not been installed on your computer".format(m))
         not_loaded_modules.append(m)
 if len(not_loaded_modules)>=1:
     raise MissingLibError("{} missing module(s)".format(len(not_loaded_modules)))
@@ -107,16 +107,17 @@ Parameters
     diverses All information that will be stored in the class
 
 .. tip:: Details on each of the information are given in comments in the source code"""
-    def __init__(self,Name,ID,Stack,Tab,Damage,Strength,Tool,Version,Mobs,Url=""):
+    def __init__(self,Name,ID,Stack,Tab,Damage,Strength,Tool,Version,Mobs,Image,Url=""):
         self.Name = Name  #Name of the item
         self.ID = ID  #Text id
         self.Stack = Stack  #Size of a stack
         self.CreativeTab = Tab  #Tab in creative gamemode
-        self.Damage = Damage  #>eapon damage
+        self.Damage = Damage  #Weapon damage
         self.Strength = Strength  #Durability
         self.Tool = Tool  #Tool able to destroy it
         self.Version = Version  #Game version when adding
         self.Mobs = Mobs  #List of mobs that can drop this item
+        self.Image = Image  #Url of an image
         self.Url = Url  #Url of the item page
 
 class Command():
@@ -512,8 +513,14 @@ Raises
                 Mobs.append(match.group(1))
     except AttributeError:
         pass
+    #-- Image --#
+    Imgs = regex.search(r"<img class='block-big tooltip' src='([^']+)' alt='[^']+' />[^<]+<div class=\"popid\">ID : <strong>[^<]+</strong></div>",data,regex.MULTILINE)
+    if Imgs != None:
+        Imgs = "https://fr-minecraft.net/"+Imgs.group(1)
+    else:
+        Imgs != None
     #-- Final entity --#
-    Bl = Item(Name=Names,ID=IDs,Stack=Stacks,Tab=Tabs,Damage=Dmgs,Strength=Strs,Tool=Tools,Version=Vs,Mobs=Mobs)
+    Bl = Item(Name=Names,ID=IDs,Stack=Stacks,Tab=Tabs,Damage=Dmgs,Strength=Strs,Tool=Tools,Version=Vs,Mobs=Mobs,Image=Imgs)
     if url != None:
         Bl.Url = url
     return Bl
