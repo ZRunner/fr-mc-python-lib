@@ -100,6 +100,7 @@ Here is a list of all variables accessible after creation:
    * Tool
    * Version
    * Mobs
+   * Image
    * Url
    
 Parameters
