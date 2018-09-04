@@ -519,7 +519,7 @@ Raises
     if Imgs != None:
         Imgs = "https://fr-minecraft.net/"+Imgs.group(1)
     else:
-        Imgs != None
+        Imgs = None
     #-- Final entity --#
     Bl = Item(Name=Names,ID=IDs,Stack=Stacks,Tab=Tabs,Damage=Dmgs,Strength=Strs,Tool=Tools,Version=Vs,Mobs=Mobs,Image=Imgs)
     if url != None:
