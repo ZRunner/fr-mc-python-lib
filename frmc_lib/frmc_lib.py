@@ -181,6 +181,10 @@ Parameters
 
 
 
+
+
+
+
 #----- Useful functions -----#
 def main(name,Type):
     """The main function shortens the information acquisition method. It allows to generate an object from a simple word \
@@ -548,12 +552,19 @@ Raises
     if url != None and data == None:
         data = url_to_data(url)
     #-- Syntax --#
-    c1 = regex.search(r"(?<=Syntaxe : <b>)([^<]+)(?:.|\n)+(?=</span>\s{9}<a class=\"legende-bouton\")",data.replace("\r\n        ","         "),regex.MULTILINE)
+    data = data.replace("\r\n        ","         ")
+    #c1 = regex.search(r"(?<=Syntaxe : <b>)(\d+|\D+)(?=</span>\s{8,}<a class=\"legende-bouton\")",data.replace("\r\n        ","         "),regex.MULTILINE)
+    part1  = regex.search(r'(?<=Syntaxe : <b>)((\s|.)+)',data)
+    c1 = None
+    if part1 != None:
+        part2 = regex.search(r'(?=\s{8,}<a class=\"legende-bouton\")((.|\s)+)',part1.group(1))
+        if part2 != None:
+            c1 = part1.group(1).replace(part2.group(1),"")
     if c1 != None:
         Syntaxs = list()
-        s = c1.group(0)
-        Names = c1.group(1).replace("/","")
-        for m in regex.finditer(r'<[^>]+>',c1.group(0)):
+        s = c1
+        Names = c1.split("<")[0].replace("/","")
+        for m in regex.finditer(r'<[^>]+>',c1):
             s = s.replace(m.group(0),'')
         s = s.replace("&lt;","<").replace("&gt;",">")
         s = s.split("         ")
@@ -628,7 +639,7 @@ Raises
         Ts = None
     #-- Action --#
     try:
-        act = regex.search(r"<br><u>Action pour débloquer ce progrès :</u><br/>\s*<span class='news-content'>([^\n]+)",data2).group(1)
+        act = regex.search(r"<br><u>Action pour débloquer ce progr.s :</u><br/>\s*<span class='news-content'>([^\n]+)",data2).group(1)
         Actions = act
         for m in regex.finditer(r'<[^>]+>',act):
             Actions = Actions.replace(m.group(0),'')
@@ -637,13 +648,13 @@ Raises
         Actions = None
     #-- Parent --#
     try:
-        Ps = regex.search(r"<u>Pour d.bloquer ce progrès, il vous faudra :</u>\s*<a rel=\"popup\" href=\"[^\"]+\" onclick=\"return hs\.htmlExpand\(this, { objectType: 'ajax', minWidth: '700', headingText: 'Progrès - ([^\']+)'} \)\"  class=\"content_popup_link \"> ",data2).group(1).rstrip()
+        Ps = regex.search(r"<u>Pour d.bloquer ce progr.s, il vous faudra :</u>\s*<a rel=\"popup\" href=\"[^\"]+\" onclick=\"return hs\.htmlExpand\(this, { objectType: 'ajax', minWidth: '700', headingText: 'Progrès - ([^\']+)'} \)\"  class=\"content_popup_link \"> ",data2).group(1).rstrip()
     except:
         Ps = None
     #-- Children --#
     Cs = list()
     try:
-        c = regex.search(r"(?<=<u>Succès débloqués par ce progrès :</u><br/>)\s*<ul>(?:\s*<li><a[^>]+>\s*<div[^>]+>\s*<img[^>]+>\s*</div> [^<]+</a></li>)*",data2).group(0)
+        c = regex.search(r"(?<=<u>Succès débloqués par ce progr.s :</u><br/>)\s*<ul>(?:\s*<li><a[^>]+>\s*<div[^>]+>\s*<img[^>]+>\s*</div> [^<]+</a></li>)*",data2).group(0)
         #for m in regex.finditer(r"> ([^<]+)<",c):
         for m in regex.finditer(r'> ([^<]+[^\s])<',c):
             Cs.append(m.group(1))
