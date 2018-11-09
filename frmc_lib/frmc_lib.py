@@ -133,6 +133,7 @@ Here is a very long list of the immensity of the hundreds of information accessi
    * Syntax
    * Examples
    * Version
+   * Url
    
 Parameters
 ----------
@@ -161,6 +162,7 @@ Here is the list of information that can be obtained after creating the object:
     * Parent
     * Children
     * Version
+    * Image
     * Url
 
 Parameters
@@ -169,7 +171,7 @@ Parameters
 
 .. tip:: Details on each of the information are given in comments in the source code
 """
-    def __init__(self,Name,ID,Type,Action,Parent,Children,Version,Url=None):
+    def __init__(self,Name,ID,Type,Action,Parent,Children,Version,Image,Url=None):
         self.Name = Name  #Name of the advancement
         self.ID = ID  #Text identifier
         self.Type = Type  #Type of the advancement (Progrès/Objectif)
@@ -177,6 +179,7 @@ Parameters
         self.Parent = Parent  #Previous advancement in the Tree structure
         self.Children = Children  #List of next advancement(s) in the Tree structure
         self.Version = Version  #Game version when adding
+        self.Image = Image  #Logo of the advancement
         self.Url = Url  #Url of the advancement page
 
 
@@ -655,17 +658,23 @@ Raises
     Cs = list()
     try:
         c = regex.search(r"(?<=<u>Succès débloqués par ce progr.s :</u><br/>)\s*<ul>(?:\s*<li><a[^>]+>\s*<div[^>]+>\s*<img[^>]+>\s*</div> [^<]+</a></li>)*",data2).group(0)
-        #for m in regex.finditer(r"> ([^<]+)<",c):
         for m in regex.finditer(r'> ([^<]+[^\s])<',c):
             Cs.append(m.group(1))
     except:
         pass
+    #-- Image --#
+    try:
+        Imgs = "https://fr-minecraft.net/" + regex.search(r"<div class=\"advancement_icon_big tooltip_advancement.?\" [^<]+<img(?:.*)(?=src='([^']+)' [^<]+</div>)",data).group(1)
+    except:
+        Imgs = None
+    if Imgs == "https://fr-minecraft.net/css/img/pixel.png":  #Fake image
+        Imgs = None
     #-- Version --#
     try:
         Vs = regex.search(regex_version,data).group(1)
     except AttributeError:
         Vs = None
-    Ad = Advancement(Name=Names,ID=IDs,Type=Ts,Action=Actions,Parent=Ps,Children=Cs,Version=Vs)
+    Ad = Advancement(Name=Names,ID=IDs,Type=Ts,Action=Actions,Parent=Ps,Children=Cs,Image=Imgs,Version=Vs)
     if url != None:
         Ad.Url = url
     return Ad
