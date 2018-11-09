@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="frmc_lib",
-    version = "1.0.2a",
+    version = "1.0.3",
     description = 'A Python 3 library that allows you to retrieve Minecraft game information from the fr-minecraft.net website',
     author = 'ZRunner',
     author_email = 'z.runner.mc@gmail.com',

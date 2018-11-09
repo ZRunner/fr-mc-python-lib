@@ -1,5 +1,5 @@
 -i https://pypi.org/simple
 sphinxcontrib-asyncio
 sphinx_autodoc_napoleon_typehints
-requests==2.19.1
+requests>=2.20.00
 regex==2018.07.11

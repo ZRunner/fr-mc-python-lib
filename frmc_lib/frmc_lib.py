@@ -70,7 +70,7 @@ Parameters
 
 .. tip:: Details on each of the information are given in comments in the source code
 """
-    def __init__(self,Name,ID,Type,PV,PA,XP,Biomes,Dimensions,Version,Img,url=""):
+    def __init__(self,Name,ID,Type,PV,PA,XP,Biomes,Dimensions,Version,Img,url=None):
         self.Name = Name  #Name of the entity
         self.ID = ID  #Text id
         self.Type = Type  #Type of the entity
@@ -108,7 +108,7 @@ Parameters
     diverses All information that will be stored in the class
 
 .. tip:: Details on each of the information are given in comments in the source code"""
-    def __init__(self,Name,ID,Stack,Tab,Damage,Strength,Tool,Version,Mobs,Image,Url=""):
+    def __init__(self,Name,ID,Stack,Tab,Damage,Strength,Tool,Version,Mobs,Image,Url=None):
         self.Name = Name  #Name of the item
         self.ID = ID  #Text id
         self.Stack = Stack  #Size of a stack
@@ -139,7 +139,7 @@ Parameters
     diverses All information that will be stored in the class
 
 .. tip:: Details on each of the information are given in comments in the source code"""
-    def __init__(self,Name,Syntax,Ex,Version,Url):
+    def __init__(self,Name,Syntax,Ex,Version,Url=None):
         self.Name = Name  #Name of the command
         self.Syntax = Syntax  #List of parameters, sorted in order of use
         self.Examples = Ex  #List of some examples, contained in tuples in the form (syntax, explanation)
@@ -169,7 +169,7 @@ Parameters
 
 .. tip:: Details on each of the information are given in comments in the source code
 """
-    def __init__(self,Name,ID,Type,Action,Parent,Children,Version,Url=""):
+    def __init__(self,Name,ID,Type,Action,Parent,Children,Version,Url=None):
         self.Name = Name  #Name of the advancement
         self.ID = ID  #Text identifier
         self.Type = Type  #Type of the advancement (Progrès/Objectif)
@@ -359,13 +359,13 @@ Raises
         raise ValueError("data and url cannot be empty at the same time")
     if url != None and data == None:
         data = url_to_data(url)
-    PVs = 0
-    PAs = 0
+    PVs = None
+    PAs = None
     #-- Image --#
     try:
         img = "http://fr-minecraft.net/"+regex.search(r"<img src=\"([^\"]+)\" class=\"img\" alt=[^>]+>",data).group(1)
     except AttributeError:
-        img =  ""
+        img =  None
         pass
     #-- PV/PA --#
     matches = regex.finditer(r"<u>(.+)</u>(?:[^>]+)><img[^>]+title=\"([^\"]+)",data,regex.MULTILINE)
@@ -378,7 +378,7 @@ Raises
     #-- ID --#
     IDs = list()
     try:
-        for matchNum,match in enumerate(regex.finditer(r"<p class=\"identifiant\"><b>([^<]+)</b>([^<]+)",data,regex.MULTILINE)):
+        for match in regex.finditer(r"<p class=\"identifiant\"><b>([^<]+)</b>([^<]+)",data,regex.MULTILINE):
             IDs.append(match.group(1)+" "+match.group(2))
     except AttributeError:
         pass
@@ -386,17 +386,17 @@ Raises
     try:
         Type = regex.search(r"<u>Type :</u> <span style=\"color: red;\">([^<]+)</span>",data).group(1)
     except AttributeError:
-        Type = ""
+        Type = None
         pass
     #-- Dropped xp --#
     try:
         XPs = regex.search(r"<u>Experience :</u> <img [^>]+> (\d)<br/>",data).group(1)
     except AttributeError:
-        XPs = 0
+        XPs = None
         pass
     #-- Biomes --#
     Bioms = list()
-    for matchNum,match in enumerate(regex.finditer(r"<li><img [^>]+ /> <a [^>]+>([^<]+)</a>",data)):
+    for match in regex.finditer(r"<li><img [^>]+ /> <a [^>]+>([^<]+)</a>",data):
         Bioms.append(match.group(1))
     #-- Dimensions --#
     Dimensions = [0,0,0]
@@ -413,13 +413,13 @@ Raises
     try:
         Vs = regex.search(regex_version,data).group(1)
     except AttributeError:
-        Vs =""
+        Vs = None
     #-- Name --#
     Names = regex.search(r"<h3>(.+)<span>",data,regex.MULTILINE)
     if Names != None:
         Names = Names.group(1)
     else:
-        Names = ""
+        Names = None
     #-- Final entity --#
     En = Entity(Name=Names,ID="\n".join(IDs),Type=Type,PV=PVs,PA=PAs,XP=XPs,Biomes=Bioms,Dimensions=Dimensions,Version=Vs,Img=img)
     if url != None:
@@ -461,12 +461,10 @@ Raises
     Names = regex.search(r"<div class=\"popnom\">([^<]+)<br /> <em>[^<]+</em></div>",data,regex.MULTILINE)
     if Names != None:
         Names = Names.group(1)
-    else:
-        Names = ""
     #-- ID --#
     IDs = list()
     try:
-        for matchNum,match in enumerate(regex.finditer(r"<p class=\"identifiant\"><b>([^<]+)</b>([^<]+)",data,regex.MULTILINE)):
+        for match in regex.finditer(r"<p class=\"identifiant\"><b>([^<]+)</b>([^<]+)",data,regex.MULTILINE):
             IDs.append(match.group(1)+" "+match.group(2))
     except AttributeError:
         pass
@@ -474,8 +472,6 @@ Raises
     Stacks = regex.search(r"<p>Stackable par (\d+) </p></div>",data,regex.MULTILINE)
     if Stacks != None:
         Stacks = Stacks.group(1)
-    else:
-        Stacks = 0
     #-- Tab --#
     Tabs = regex.search(r"</span> ([^<]+)</p>",data,regex.MULTILINE)
     if Tabs != None:
@@ -486,20 +482,14 @@ Raises
     Dmgs = regex.search(r"Cette arme inflige des dégats: <span class=\"healthbar\"><img src=\"[^\"]+\" style=\"[^\"]+\" alt=\"([\d.]+) [^>]+>",data,regex.MULTILINE)
     if Dmgs != None:
         Dmgs = Dmgs.group(1)
-    else:
-        Dmgs = None
     #-- Strength --#
     Strs = regex.search(r"<p>Solidité : Cet objet est utilisable <strong style=\"color: green;\">([\d]+)</strong> fois.</p>",data,regex.MULTILINE)
     if Strs != None:
         Strs = Strs.group(1)
-    else:
-        Strs = None
     #-- Tool --#
     Tools = regex.search(r"<a rel=\"popup\" href=\"[^\"]+\" onclick=\"[^\"]+\"  class=\"content_popup_link \">([^>]+)</a></span><br/>",data,regex.MULTILINE)
     if Tools != None:
         Tools = Tools.group(1)
-    else:
-        Tools = None
     #-- Version --#
     try:
         #Vs = regex.search(r"<div class=\"version\">[^<]+<br/><[^>]+>([^<]+)</a>",data).group(1)
@@ -518,8 +508,6 @@ Raises
     Imgs = regex.search(r"<img class='block-big tooltip' src='([^']+)' alt='[^']+' />[^<]+<div class=\"popid\">ID : <strong>[^<]+</strong></div>",data,regex.MULTILINE)
     if Imgs != None:
         Imgs = "https://fr-minecraft.net/"+Imgs.group(1)
-    else:
-        Imgs = None
     #-- Final entity --#
     Bl = Item(Name=Names,ID=IDs,Stack=Stacks,Tab=Tabs,Damage=Dmgs,Strength=Strs,Tool=Tools,Version=Vs,Mobs=Mobs,Image=Imgs)
     if url != None:
@@ -584,7 +572,7 @@ Raises
     try:
         Vs = regex.search(regex_version,data).group(1)
     except AttributeError:
-        Vs =""
+        Vs = None
     #-- Final command --#
     Cm = Command(Name=Names,Syntax=Syntaxs,Ex=Examples,Version=Vs)
     if url != None:
@@ -627,17 +615,17 @@ Raises
     try:
         Names = regex.search(r'<div class=\"popnom\">([^<]+)<br />',data).group(1)
     except:
-        Names = ""
+        Names = None
     #-- ID --#
     try:
         IDs = regex.search(r'<div class=\"popid\">ID : <strong>([^<]+)</strong></div>',data).group(1)
     except:
-        IDs = ""
+        IDs = None
     #-- Type --#
     try:
         Ts = regex.search(r'<u>Type :</u> <span [^>]+>([^<]+)</span><br/>',data).group(1)
     except:
-        Ts = ""
+        Ts = None
     #-- Action --#
     try:
         act = regex.search(r"<br><u>Action pour débloquer ce progrès :</u><br/>\s*<span class='news-content'>([^\n]+)",data2).group(1)
@@ -646,12 +634,12 @@ Raises
             Actions = Actions.replace(m.group(0),'')
         Actions = Actions.replace("\r","").replace("\n","")
     except:
-        Actions = ""
+        Actions = None
     #-- Parent --#
     try:
         Ps = regex.search(r"<u>Pour d.bloquer ce progrès, il vous faudra :</u>\s*<a rel=\"popup\" href=\"[^\"]+\" onclick=\"return hs\.htmlExpand\(this, { objectType: 'ajax', minWidth: '700', headingText: 'Progrès - ([^\']+)'} \)\"  class=\"content_popup_link \"> ",data2).group(1).rstrip()
     except:
-        Ps = ""
+        Ps = None
     #-- Children --#
     Cs = list()
     try:
@@ -665,7 +653,7 @@ Raises
     try:
         Vs = regex.search(regex_version,data).group(1)
     except AttributeError:
-        Vs =""
+        Vs = None
     Ad = Advancement(Name=Names,ID=IDs,Type=Ts,Action=Actions,Parent=Ps,Children=Cs,Version=Vs)
     if url != None:
         Ad.Url = url
