@@ -1,13 +1,9 @@
 
-#Here are the libraries used by the code:
-libs = ["requests","regex"]
-
-
+import requests, re
 
 #----- Some useful data -----#
 regex_version = r'<div class=\"version\">[^<]+<br/>\s*<[^>]+>\s*([^<\n\r]+)\s*</a>'
 timeout = 5
-
 
 
 #----- Errors management -----#
@@ -30,46 +26,34 @@ class WrongDataError(Error):
     def __init__(self,message):
         self.message = message
 
-#----- Import libraries -----#
-not_loaded_modules = list()
-for m in libs:
-    try:
-        exec("import "+m)
-    except ModuleNotFoundError:
-        print("The {} module has not been installed on your computer".format(m))
-        not_loaded_modules.append(m)
-if len(not_loaded_modules)>=1:
-    raise MissingLibError("{} missing module(s)".format(len(not_loaded_modules)))
-
-
 
 #----- Classes -----#
 class Entity():
     """This class represents an entity, and all information about it.
 
-Here is a list of all variables accessible after creation:
+    Here is a list of all variables accessible after creation:
 
-.. hlist::
-   :columns: 2
+    .. hlist::
+    :columns: 2
 
-   * Name
-   * ID
-   * Type
-   * PV
-   * PA
-   * XP
-   * Biomes
-   * Dimensions
-   * Version
-   * Image
-   * Url
-   
-Parameters
-----------
-    diverses All information that will be stored in the class
+    * Name
+    * ID
+    * Type
+    * PV
+    * PA
+    * XP
+    * Biomes
+    * Dimensions
+    * Version
+    * Image
+    * Url
+    
+    Parameters
+    ----------
+        diverses All information that will be stored in the class
 
-.. tip:: Details on each of the information are given in comments in the source code
-"""
+    .. tip:: Details on each of the information are given in comments in the source code
+    """
     def __init__(self,Name,ID,Type,PV,PA,XP,Biomes,Dimensions,Version,Img,url=None):
         self.Name = Name  #Name of the entity
         self.ID = ID  #Text id
@@ -86,28 +70,29 @@ Parameters
 class Item():
     """This class represent an item or a block. Some information can be empty depending on the type of item (weapon, block...).
 
-Here is a list of all variables accessible after creation:
+    Here is a list of all variables accessible after creation:
 
-.. hlist::
-   :columns: 2
+    .. hlist::
+    :columns: 2
 
-   * Name
-   * ID
-   * Stack
-   * CreativeTab
-   * Damage
-   * Strength
-   * Tool
-   * Version
-   * Mobs
-   * Image
-   * Url
-   
-Parameters
-----------
-    diverses All information that will be stored in the class
+    * Name
+    * ID
+    * Stack
+    * CreativeTab
+    * Damage
+    * Strength
+    * Tool
+    * Version
+    * Mobs
+    * Image
+    * Url
+    
+    Parameters
+    ----------
+        diverses All information that will be stored in the class
 
-.. tip:: Details on each of the information are given in comments in the source code"""
+    .. tip:: Details on each of the information are given in comments in the source code
+    """
     def __init__(self,Name,ID,Stack,Tab,Damage,Strength,Tool,Version,Mobs,Image,Url=None):
         self.Name = Name  #Name of the item
         self.ID = ID  #Text id
@@ -124,22 +109,23 @@ Parameters
 class Command():
     """This class represent a command (sometimes also called *cheat*).
 
-Here is a very long list of the immensity of the hundreds of information accessible after creation (yes there are only 4, it's not a bug)
+    Here is a very long list of the immensity of the hundreds of information accessible after creation (yes there are only 4, it's not a bug)
 
-.. hlist::
-   :columns: 1
+    .. hlist::
+    :columns: 1
 
-   * Name
-   * Syntax
-   * Examples
-   * Version
-   * Url
-   
-Parameters
-----------
-    diverses All information that will be stored in the class
+    * Name
+    * Syntax
+    * Examples
+    * Version
+    * Url
+    
+    Parameters
+    ----------
+        diverses All information that will be stored in the class
 
-.. tip:: Details on each of the information are given in comments in the source code"""
+    .. tip:: Details on each of the information are given in comments in the source code
+    """
     def __init__(self,Name,Syntax,Ex,Version,Url=None):
         self.Name = Name  #Name of the command
         self.Syntax = Syntax  #List of parameters, sorted in order of use
@@ -150,27 +136,27 @@ Parameters
 class Advancement():
     """This class represents an advancement, the event that replaces achievements since Minecraft Java Edition 1.12.
 
-Here is the list of information that can be obtained after creating the object:
+    Here is the list of information that can be obtained after creating the object:
 
-.. hlist::
-    :columns: 1
+    .. hlist::
+        :columns: 1
 
-    * Name
-    * ID
-    * Type
-    * Action
-    * Parent
-    * Children
-    * Version
-    * Image
-    * Url
+        * Name
+        * ID
+        * Type
+        * Action
+        * Parent
+        * Children
+        * Version
+        * Image
+        * Url
 
-Parameters
-----------
-    diverses All information that will be stored in the class
+    Parameters
+    ----------
+        diverses All information that will be stored in the class
 
-.. tip:: Details on each of the information are given in comments in the source code
-"""
+    .. tip:: Details on each of the information are given in comments in the source code
+    """
     def __init__(self,Name,ID,Type,Action,Parent,Children,Version,Image,Url=None):
         self.Name = Name  #Name of the advancement
         self.ID = ID  #Text identifier
@@ -183,69 +169,64 @@ Parameters
         self.Url = Url  #Url of the advancement page
 
 
-
-
-
-
-
 #----- Useful functions -----#
-def main(name,Type):
+def main(name: str, item_type: str):
     """The main function shortens the information acquisition method. It allows to generate an object from a simple word \
-and a type, without having to execute all the sub-functions. This is probably the function you will use most often for \
-standard library use.
+    and a type, without having to execute all the sub-functions. This is probably the function you will use most often for \
+    standard library use.
 
-Parameters
-----------
-name: :class:`str`
-    The name of the item to search for
-Type: :class:`str`
-    The type of item (Entité, Bloc, Item, etc.)
+    Parameters
+    ----------
+    name: :class:`str`
+        The name of the item to search for
+    item_type: :class:`str`
+        The type of item (Entité, Bloc, Item, etc.)
 
-Return
-------
-    diverses
-        Object of type Entity(), Item() or other, depending on the Type given in parameters
+    Return
+    ------
+        diverses
+            Object of type Entity(), Item() or other, depending on the Type given in parameters
 
-Raises
-------
-    :class:`~frmc_lib.ItemNotFoundError`
-        The type of the given item is not available yet, or the given item can't be found
-"""
+    Raises
+    ------
+        :class:`~frmc_lib.ItemNotFoundError`
+            The type of the given item is not available yet, or the given item can't be found
+    """
     data = search(name)
-    urls = search_links(data,Type)
+    urls = search_links(data,item_type)
     if len(urls) == 0:
-        raise ItemNotFoundError("This item can't be found: {} (Type: {})".format(name,Type))
-    if Type.lower() in ["bloc","item"]:
+        raise ItemNotFoundError("This item can't be found: {} (Type: {})".format(name,item_type))
+    if item_type.lower() in ["bloc","item"]:
         item = search_item(url=urls[0])
-    elif Type.lower() == "entité":
+    elif item_type.lower() == "entité":
         item = search_entity(url=urls[0])
-    elif Type.lower() == "commande":
+    elif item_type.lower() == "commande":
         item = search_cmd(url=urls[0])
-    elif Type.lower() == "progrès":
+    elif item_type.lower() == "progrès":
         item = search_adv(url=urls[0])
     else:
-        raise ItemNotFoundError("The type of this item is not available (Given type: {})".format(Type))
+        raise ItemNotFoundError("The type of this item is not available (Given type: {})".format(item_type))
     return item
 
 def url_to_data(url):
     """This function allows you to retrieve the source code of a web page, from its url address. \
-You just have to give the url as parameter to receive a string containing the html code. 
+    You just have to give the url as parameter to receive a string containing the html code. 
 
-Parameters
-----------
-url: :class:`str`
-    The url of the page
+    Parameters
+    ----------
+    url: :class:`str`
+        The url of the page
 
-Return
-------
-    :class:`str`
-        The html string of the page
+    Return
+    ------
+        :class:`str`
+            The html string of the page
 
-Raises
-------
-    :class:`TypeError`
-        The url must be a string.
-"""
+    Raises
+    ------
+        :class:`TypeError`
+            The url must be a string.
+    """
     if type(url) != str:
         raise TypeError("url must be a string")
     try:
@@ -258,25 +239,24 @@ Raises
     return data
 
 
-
 #----- Searching functions -----#
 def search(item):
     """This function returns the source code of the search page, initialized with a string containing the query. 
 
-Parameters
-----------
-item: :class:`str`
-    The name of the item to search. 
+    Parameters
+    ----------
+    item: :class:`str`
+        The name of the item to search. 
 
-Return
-------
-    :class:`str`
-        The url, in string
+    Return
+    ------
+        :class:`str`
+            The url, in string
 
-Raises
-------
-    :class:`TypeError`
-        The given item must be a string
+    Raises
+    ------
+        :class:`TypeError`
+            The given item must be a string
     """
     if type(item) != str:
         raise TypeError("item must be a string")
@@ -286,32 +266,32 @@ Raises
 
 def search_links(code,Type=None,limit=1):
     """This function allows you to find a certain number of links to item records from the \
-html code of the search page. For example if you want to get the url addresses \
-of all the swords, you have to give in arguments the code of the page \
-https://fr-minecraft.net/recherche.php?search=sword and "Item" in type. 
-You can get several links by changing the value of the limit argument (1 by default)
+    html code of the search page. For example if you want to get the url addresses \
+    of all the swords, you have to give in arguments the code of the page \
+    https://fr-minecraft.net/recherche.php?search=sword and "Item" in type. 
+    You can get several links by changing the value of the limit argument (1 by default)
 
-Parameters
-----------
-code: :class:`str`
-    The html string of the search page
-Type: :class:`str`
-    The type of item sought (Entité, Bloc, Item, Potion, Enchant, Progress, Effect, Success, Command), insensitive case. Type=None admits all types
-limit: :class:`int`
-    The maximum number of links to return
+    Parameters
+    ----------
+    code: :class:`str`
+        The html string of the search page
+    Type: :class:`str`
+        The type of item sought (Entité, Bloc, Item, Potion, Enchant, Progress, Effect, Success, Command), insensitive case. Type=None admits all types
+    limit: :class:`int`
+        The maximum number of links to return
 
-Return
-------
-    :class:`list`
-        List of matching links
+    Return
+    ------
+        :class:`list`
+            List of matching links
 
-Raises
-------
-    :class:`TypeError`
-        One of these arguments is not in the right type. Please check that :code:`code` is a :class:`str`, :code:`Type` is a :class:`str` or \
-        :class:`None, and :code:`limit` an :class:`int`.
-    :class:`ValueError`
-        The given type is not valid, or the limit isn't strictly positive.
+    Raises
+    ------
+        :class:`TypeError`
+            One of these arguments is not in the right type. Please check that :code:`code` is a :class:`str`, :code:`Type` is a :class:`str` or \
+            :class:`None, and :code:`limit` an :class:`int`.
+        :class:`ValueError`
+            The given type is not valid, or the limit isn't strictly positive.
     """
     if type(code) != str or type(Type) not in [str,None] or type(limit) != int:
         raise TypeError("One of these arguments is not in the right type")
@@ -320,8 +300,8 @@ Raises
             raise ValueError("The given type is not valid : {}".format(Type))
     if limit<1:
         raise ValueError("The limit must be strictly positive!")
-    matches = regex.findall(r"<td class='id'><a[^>]+>([^<]+)",code)
-    links = regex.findall(r"<a href=\"([^\"]+)\"  class=\"content_link \">Voir la fiche complète</a>",code)
+    matches = re.findall(r"<td class='id'><a[^>]+>([^<]+)",code)
+    links = re.findall(r"<a href=\"([^\"]+)\"  class=\"content_link \">Voir la fiche complète</a>",code)
     results1 = list()
     results2 = list()
     if Type==None:
@@ -336,30 +316,29 @@ Raises
     return results2
 
 
-
 #----- Entity infos -----#
 def search_entity(data=None,url=None):
     """Function that retrieves all information about an entity from the html code of its page, and creates an :class:`~frmc_lib.Entity` object.
 
-Parameters
-----------
-data: :py:class:`str`
-    Source code of the page, in html (useless if you fill url)
-url: :class:`str`
-    Url of the page (useless if you enter data)
+    Parameters
+    ----------
+    data: :py:class:`str`
+        Source code of the page, in html (useless if you fill url)
+    url: :class:`str`
+        Url of the page (useless if you enter data)
 
-Return
-------
-    :class:`~frmc_lib.Entity`
-        Object that contains all the information found about this entity
+    Return
+    ------
+        :class:`~frmc_lib.Entity`
+            Object that contains all the information found about this entity
 
-Raises
-------
-    :class:`TypeError`
-        Data and url must be string or None
-    :class:`ValueError`
-        Data and url cannot be empty at the same time
-        """
+    Raises
+    ------
+        :class:`TypeError`
+            Data and url must be string or None
+        :class:`ValueError`
+            Data and url cannot be empty at the same time
+    """
     if type(data) not in [str,None] and type(url) not in [str,None]:
         raise TypeError("data and url must be string or None")
     if data == url == None:
@@ -370,12 +349,12 @@ Raises
     PAs = None
     #-- Image --#
     try:
-        img = "http://fr-minecraft.net/"+regex.search(r"<img src=\"([^\"]+)\" class=\"img\" alt=[^>]+>",data).group(1)
+        img = "http://fr-minecraft.net/"+re.search(r"<img src=\"([^\"]+)\" class=\"img\" alt=[^>]+>",data).group(1)
     except AttributeError:
         img =  None
         pass
     #-- PV/PA --#
-    matches = regex.finditer(r"<u>(.+)</u>(?:[^>]+)><img[^>]+title=\"([^\"]+)",data,regex.MULTILINE)
+    matches = re.finditer(r"<u>(.+)</u>(?:[^>]+)><img[^>]+title=\"([^\"]+)",data,re.MULTILINE)
     if matches != None:
         for match in matches:
             if match.group(1)=="Points de vie :":
@@ -385,30 +364,30 @@ Raises
     #-- ID --#
     IDs = list()
     try:
-        for match in regex.finditer(r"<p class=\"identifiant\"><b>([^<]+)</b>([^<]+)",data,regex.MULTILINE):
+        for match in re.finditer(r"<p class=\"identifiant\"><b>([^<]+)</b>([^<]+)",data,re.MULTILINE):
             IDs.append(match.group(1)+" "+match.group(2))
     except AttributeError:
         pass
     #-- Type --#
     try:
-        Type = regex.search(r"<u>Type :</u> <span style=\"color: red;\">([^<]+)</span>",data).group(1)
+        Type = re.search(r"<u>Type :</u> <span style=\"color: red;\">([^<]+)</span>",data).group(1)
     except AttributeError:
         Type = None
         pass
     #-- Dropped xp --#
     try:
-        XPs = regex.search(r"<u>Experience :</u> <img [^>]+> (\d)<br/>",data).group(1)
+        XPs = re.search(r"<u>Experience :</u> <img [^>]+> (\d)<br/>",data).group(1)
     except AttributeError:
         XPs = None
         pass
     #-- Biomes --#
     Bioms = list()
-    for match in regex.finditer(r"<li><img [^>]+ /> <a [^>]+>([^<]+)</a>",data):
+    for match in re.finditer(r"<li><img [^>]+ /> <a [^>]+>([^<]+)</a>",data):
         Bioms.append(match.group(1))
     #-- Dimensions --#
     Dimensions = [0,0,0]
     try:
-        r = regex.search(r"<div class=\"dimensions\"><[^>]+>Dimensions :</span> <br/>\s*<ul>\s*<li>[^<\d]+([\d|.]+)</li>\s*<li>[^<\d]+([\d|.]+)</li>\s*<li>[^<\d]+([\d|.]+)",data)
+        r = re.search(r"<div class=\"dimensions\"><[^>]+>Dimensions :</span> <br/>\s*<ul>\s*<li>[^<\d]+([\d|.]+)</li>\s*<li>[^<\d]+([\d|.]+)</li>\s*<li>[^<\d]+([\d|.]+)",data)
         Dimensions = list()
         for group in r.groups():
             Dimensions.append(float(group))
@@ -418,11 +397,11 @@ Raises
         Dimensions = [0,0,0]
     #-- Version --#
     try:
-        Vs = regex.search(regex_version,data).group(1)
+        Vs = re.search(regex_version,data).group(1)
     except AttributeError:
         Vs = None
     #-- Name --#
-    Names = regex.search(r"<h3>(.+)<span>",data,regex.MULTILINE)
+    Names = re.search(r"<h3>(.+)<span>",data,re.MULTILINE)
     if Names != None:
         Names = Names.group(1)
     else:
@@ -434,30 +413,29 @@ Raises
     return En
 
 
-
 #----- Bloc/item infos -----#
 def search_item(data=None,url=None):
     """Function that retrieves all information about an item from the html code of its page, and creates an :class:`~frmc_lib.Item` object.
 
-Parameters
-----------
-data: :class:`str`
-    Source code of the page, in html (useless if you fill url)
-url: :class:`str`
-    Url of the page (useless if you enter data)
+    Parameters
+    ----------
+    data: :class:`str`
+        Source code of the page, in html (useless if you fill url)
+    url: :class:`str`
+        Url of the page (useless if you enter data)
 
-Return
-------
-    :class:`~frmc_lib.Item`
-        Object that contains all the information found about this item/block
+    Return
+    ------
+        :class:`~frmc_lib.Item`
+            Object that contains all the information found about this item/block
 
-Raises
-------
-    :class:`TypeError`
-        Data and url must be string or None
-    :class:`ValueError`
-        Data and url cannot be empty at the same time
-"""
+    Raises
+    ------
+        :class:`TypeError`
+            Data and url must be string or None
+        :class:`ValueError`
+            Data and url cannot be empty at the same time
+    """
     if type(data) not in [str,None] and type(url) not in [str,None]:
         raise TypeError("data and url must be string or None")
     if data == url == None:
@@ -465,54 +443,54 @@ Raises
     if url != None and data == None:
         data = url_to_data(url)
     #-- Name --#
-    Names = regex.search(r"<div class=\"popnom\">([^<]+)<br /> <em>[^<]+</em></div>",data,regex.MULTILINE)
+    Names = re.search(r"<div class=\"popnom\">([^<]+)<br /> <em>[^<]+</em></div>",data,re.MULTILINE)
     if Names != None:
         Names = Names.group(1)
     #-- ID --#
     IDs = list()
     try:
-        for match in regex.finditer(r"<p class=\"identifiant\"><b>([^<]+)</b>([^<]+)",data,regex.MULTILINE):
+        for match in re.finditer(r"<p class=\"identifiant\"><b>([^<]+)</b>([^<]+)",data,re.MULTILINE):
             IDs.append(match.group(1)+" "+match.group(2))
     except AttributeError:
         pass
     #-- Stack --#
-    Stacks = regex.search(r"<p>Stackable par (\d+) </p></div>",data,regex.MULTILINE)
+    Stacks = re.search(r"<p>Stackable par (\d+) </p></div>",data,re.MULTILINE)
     if Stacks != None:
         Stacks = Stacks.group(1)
     #-- Tab --#
-    Tabs = regex.search(r"</span> ([^<]+)</p>",data,regex.MULTILINE)
+    Tabs = re.search(r"<p class=\"onglet-crea\">Onglet Créatif : <span><img[^>]+></span>([^<]+)</p>",data,re.MULTILINE)
     if Tabs != None:
-        Tabs = Tabs.group(1)
+        Tabs = Tabs.group(1).strip()
     else:
         Tabs = None
     #-- Damage --#
-    Dmgs = regex.search(r"Cette arme inflige des dégats: <span class=\"healthbar\"><img src=\"[^\"]+\" style=\"[^\"]+\" alt=\"([\d.]+) [^>]+>",data,regex.MULTILINE)
+    Dmgs = re.search(r"Cette arme inflige des dégats: <span class=\"healthbar\"><img src=\"[^\"]+\" style=\"[^\"]+\" alt=\"([\d.]+) [^>]+>",data,re.MULTILINE)
     if Dmgs != None:
         Dmgs = Dmgs.group(1)
     #-- Strength --#
-    Strs = regex.search(r"<p>Solidité : Cet objet est utilisable <strong style=\"color: green;\">([\d]+)</strong> fois.</p>",data,regex.MULTILINE)
+    Strs = re.search(r"<p>Solidité : Cet objet est utilisable <strong style=\"color: green;\">([\d]+)</strong> fois.</p>",data,re.MULTILINE)
     if Strs != None:
         Strs = Strs.group(1)
     #-- Tool --#
-    Tools = regex.search(r"<a rel=\"popup\" href=\"[^\"]+\" onclick=\"[^\"]+\"  class=\"content_popup_link \">([^>]+)</a></span><br/>",data,regex.MULTILINE)
+    Tools = re.search(r"<a rel=\"popup\" href=\"[^\"]+\" onclick=\"[^\"]+\"  class=\"content_popup_link \">([^>]+)</a></span><br/>",data,re.MULTILINE)
     if Tools != None:
         Tools = Tools.group(1)
     #-- Version --#
     try:
-        #Vs = regex.search(r"<div class=\"version\">[^<]+<br/><[^>]+>([^<]+)</a>",data).group(1)
-        Vs = regex.search(regex_version,data).group(1)
+        #Vs = re.search(r"<div class=\"version\">[^<]+<br/><[^>]+>([^<]+)</a>",data).group(1)
+        Vs = re.search(regex_version,data).group(1)
     except AttributeError:
         Vs =""
     #-- Mobs --#
     Mobs = list()
     try:
-        for match in regex.finditer(r"<img src=\"img/creatures/small/[^\"]+\" alt=\"([^\"]+)\" />",data,regex.MULTILINE):
+        for match in re.finditer(r"<img src=\"img/creatures/small/[^\"]+\" alt=\"([^\"]+)\" />",data,re.MULTILINE):
             if not match.group(1) in Mobs:
                 Mobs.append(match.group(1))
     except AttributeError:
         pass
     #-- Image --#
-    Imgs = regex.search(r"<img class='block-big tooltip' src='([^']+)' alt='[^']+' />[^<]+<div class=\"popid\">ID : <strong>[^<]+</strong></div>",data,regex.MULTILINE)
+    Imgs = re.search(r"<img class='block-big tooltip' src='([^']+)' alt='[^']+' />[^<]+<div class=\"popid\">ID : <strong>[^<]+</strong></div>",data,re.MULTILINE)
     if Imgs != None:
         Imgs = "https://fr-minecraft.net/"+Imgs.group(1)
     #-- Final entity --#
@@ -522,32 +500,31 @@ Raises
     return Bl
 
 
-
 #----- Command infos -----#
 def search_cmd(data=None,url=None):
     """Function that retrieves all information about a command from the html code of its page, and creates an :class:`~frmc_lib.Command` object.
 
-Parameters
-----------
-data: :py:class:`str`
-    Source code of the page, in html (useless if you fill url)
-url: :class:`str`
-    Url of the page (useless if you enter data)
+    Parameters
+    ----------
+    data: :py:class:`str`
+        Source code of the page, in html (useless if you fill url)
+    url: :class:`str`
+        Url of the page (useless if you enter data)
 
-Return
-------
-    :class:`~frmc_lib.Command`
-        Object that contains all the information found about this command
+    Return
+    ------
+        :class:`~frmc_lib.Command`
+            Object that contains all the information found about this command
 
-Raises
-------
-    :class:`TypeError`
-        Data and url must be string or None
-    :class:`ValueError`
-        Data and url cannot be empty at the same time
-    :class:`~frmc_lib.WrongDataError`
-        Unable to find the syntax of this command. Please check the given data/url
-"""
+    Raises
+    ------
+        :class:`TypeError`
+            Data and url must be string or None
+        :class:`ValueError`
+            Data and url cannot be empty at the same time
+        :class:`~frmc_lib.WrongDataError`
+            Unable to find the syntax of this command. Please check the given data/url
+    """
     if type(data) not in [str,None] and type(url) not in [str,None]:
         raise TypeError("data and url must be string or None")
     if data == url == None:
@@ -556,18 +533,18 @@ Raises
         data = url_to_data(url)
     #-- Syntax --#
     data = data.replace("\r\n        ","         ")
-    #c1 = regex.search(r"(?<=Syntaxe : <b>)(\d+|\D+)(?=</span>\s{8,}<a class=\"legende-bouton\")",data.replace("\r\n        ","         "),regex.MULTILINE)
-    part1  = regex.search(r'(?<=Syntaxe : <b>)((\s|.)+)',data)
+    #c1 = re.search(r"(?<=Syntaxe : <b>)(\d+|\D+)(?=</span>\s{8,}<a class=\"legende-bouton\")",data.replace("\r\n        ","         "),re.MULTILINE)
+    part1  = re.search(r'(?<=Syntaxe : <b>)((\s|.)+)',data)
     c1 = None
     if part1 != None:
-        part2 = regex.search(r'(?=\s{8,}<a class=\"legende-bouton\")((.|\s)+)',part1.group(1))
+        part2 = re.search(r'(?=\s{8,}<a class=\"legende-bouton\")((.|\s)+)',part1.group(1))
         if part2 != None:
             c1 = part1.group(1).replace(part2.group(1),"")
     if c1 != None:
         Syntaxs = list()
         s = c1
         Names = c1.split("<")[0].replace("/","")
-        for m in regex.finditer(r'<[^>]+>',c1):
+        for m in re.finditer(r'<[^>]+>',c1):
             s = s.replace(m.group(0),'')
         s = s.replace("&lt;","<").replace("&gt;",">")
         s = s.split("         ")
@@ -578,13 +555,13 @@ Raises
         raise WrongDataError("Unable to find the syntax of this command")
     #-- Examples --#
     Examples = list()
-    for m in regex.finditer(r"<textarea class=\"input-exemple\">([^<]+)</textarea><br/>([^<]+)(?:<a[^>]+>([^<]+))?",data):
+    for m in re.finditer(r"<textarea class=\"input-exemple\">([^<]+)</textarea><br/>([^<]+)(?:<a[^>]+>([^<]+))?",data):
         syn = m.group(1)
         ex = m.group(2)+m.group(3) if m.group(3)!=None else m.group(2)
         Examples.append((syn,ex))
     #-- Version --#
     try:
-        Vs = regex.search(regex_version,data).group(1)
+        Vs = re.search(regex_version,data).group(1)
     except AttributeError:
         Vs = None
     #-- Final command --#
@@ -594,30 +571,29 @@ Raises
     return Cm
 
 
-
 #----- Advancement infos -----#
 def search_adv(data=None,url=None):
     """Function that retrieves all information about an advancement from the html code of its page, and creates an :class:`~frmc_lib.Advancement` object.
 
-Parameters
-----------
-data: :py:class:`str`
-    Source code of the page, in html (useless if you fill url)
-url: :class:`str`
-    Url of the page (useless if you enter data)
+    Parameters
+    ----------
+    data: :py:class:`str`
+        Source code of the page, in html (useless if you fill url)
+    url: :class:`str`
+        Url of the page (useless if you enter data)
 
-Return
-------
-    :class:`~frmc_lib.Advancement`
-        Object that contains all the information found about this command
+    Return
+    ------
+        :class:`~frmc_lib.Advancement`
+            Object that contains all the information found about this command
 
-Raises
-------
-    :class:`TypeError`
-        Data and url must be string or None
-    :class:`ValueError`
-        Data and url cannot be empty at the same time
-"""
+    Raises
+    ------
+        :class:`TypeError`
+            Data and url must be string or None
+        :class:`ValueError`
+            Data and url cannot be empty at the same time
+    """
     if type(data) not in [str,None] and type(url) not in [str,None]:
         raise TypeError("data and url must be string or None")
     if data == url == None:
@@ -627,51 +603,51 @@ Raises
     data2 = data.replace("\r\n        ","")
     #-- Name --#
     try:
-        Names = regex.search(r'<div class=\"popnom\">([^<]+)<br />',data).group(1)
+        Names = re.search(r'<div class=\"popnom\">([^<]+)<br />',data).group(1)
     except:
         Names = None
     #-- ID --#
     try:
-        IDs = regex.search(r'<div class=\"popid\">ID : <strong>([^<]+)</strong></div>',data).group(1)
+        IDs = re.search(r'<div class=\"popid\">ID : <strong>([^<]+)</strong></div>',data).group(1)
     except:
         IDs = None
     #-- Type --#
     try:
-        Ts = regex.search(r'<u>Type :</u> <span [^>]+>([^<]+)</span><br/>',data).group(1)
+        Ts = re.search(r'<u>Type :</u> <span [^>]+>([^<]+)</span><br/>',data).group(1)
     except:
         Ts = None
     #-- Action --#
     try:
-        act = regex.search(r"<br><u>Action pour débloquer ce progr.s :</u><br/>\s*<span class='news-content'>([^\n]+)",data2).group(1)
+        act = re.search(r"<br><u>Action pour débloquer ce progr.s :</u><br/>\s*<span class='news-content'>([^\n]+)",data2).group(1)
         Actions = act
-        for m in regex.finditer(r'<[^>]+>',act):
+        for m in re.finditer(r'<[^>]+>',act):
             Actions = Actions.replace(m.group(0),'')
         Actions = Actions.replace("\r","").replace("\n","")
     except:
         Actions = None
     #-- Parent --#
     try:
-        Ps = regex.search(r"<u>Pour d.bloquer ce progr.s, il vous faudra :</u>\s*<a rel=\"popup\" href=\"[^\"]+\" onclick=\"return hs\.htmlExpand\(this, { objectType: 'ajax', minWidth: '700', headingText: 'Progrès - ([^\']+)'} \)\"  class=\"content_popup_link \"> ",data2).group(1).rstrip()
+        Ps = re.search(r"<u>Pour d.bloquer ce progr.s, il vous faudra :</u>\s*<a rel=\"popup\" href=\"[^\"]+\" onclick=\"return hs\.htmlExpand\(this, { objectType: 'ajax', minWidth: '700', headingText: 'Progrès - ([^\']+)'} \)\"  class=\"content_popup_link \"> ",data2).group(1).rstrip()
     except:
         Ps = None
     #-- Children --#
     Cs = list()
     try:
-        c = regex.search(r"(?<=<u>Succès débloqués par ce progr.s :</u><br/>)\s*<ul>(?:\s*<li><a[^>]+>\s*<div[^>]+>\s*<img[^>]+>\s*</div> [^<]+</a></li>)*",data2).group(0)
-        for m in regex.finditer(r'> ([^<]+[^\s])<',c):
+        c = re.search(r"(?<=<u>Succès débloqués par ce progr.s :</u><br/>)\s*<ul>(?:\s*<li><a[^>]+>\s*<div[^>]+>\s*<img[^>]+>\s*</div> [^<]+</a></li>)*",data2).group(0)
+        for m in re.finditer(r'> ([^<]+[^\s])<',c):
             Cs.append(m.group(1))
     except:
         pass
     #-- Image --#
     try:
-        Imgs = "https://fr-minecraft.net/" + regex.search(r"<div class=\"advancement_icon_big tooltip_advancement.?\" [^<]+<img(?:.*)(?=src='([^']+)' [^<]+</div>)",data).group(1)
+        Imgs = "https://fr-minecraft.net/" + re.search(r"<div class=\"advancement_icon_big tooltip_advancement.?\" [^<]+<img(?:.*)(?=src='([^']+)' [^<]+</div>)",data).group(1)
     except:
         Imgs = None
     if Imgs == "https://fr-minecraft.net/css/img/pixel.png":  #Fake image
         Imgs = None
     #-- Version --#
     try:
-        Vs = regex.search(regex_version,data).group(1)
+        Vs = re.search(regex_version,data).group(1)
     except AttributeError:
         Vs = None
     Ad = Advancement(Name=Names,ID=IDs,Type=Ts,Action=Actions,Parent=Ps,Children=Cs,Image=Imgs,Version=Vs)
