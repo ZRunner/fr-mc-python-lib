@@ -1,9 +1,3 @@
-.. automodule:: frmc_lib
-
-
-.. role:: python(code)
-	:language: python
-
 ========
 Entities
 ========
@@ -17,8 +11,8 @@ The class
 When you search with the :func:`~frmc_lib.search_entity` function, you get an :class:`~frmc_lib.Entity` object that summarizes all the characteristics of the entity.
 The details of this class are explained here: 
 
-.. automodule:: frmc_lib
-	:members: Entity
+.. autoclass:: frmc_lib.Entity
+	:members:
 
 -------------
 How to search
@@ -27,12 +21,11 @@ How to search
 using main()
 ~~~~~~~~~~~~
 
-.. automodule:: frmc_lib
-	:members: main
+.. autofunction:: frmc_lib.main
 	:noindex:
 
-using search_entity()
+using search_item()
 ~~~~~~~~~~~~~~~~~~~~~
 
-.. automodule:: frmc_lib
-	:members: search_entity
+.. autofunction:: frmc_lib.search_item
+	:noindex:

@@ -1,9 +1,3 @@
-.. automodule:: frmc_lib
-
-
-.. role:: python(code)
-	:language: python
-
 ============
 Generalities
 ============
@@ -97,16 +91,13 @@ Main function
 -------------
 
 
-.. automodule:: frmc_lib
-	:members: main
+.. autofunction:: frmc_lib.main
 
 ---------------
 Search function
 ---------------
 
-.. automodule:: frmc_lib
-	:members: search_links
-
+.. autofunction:: frmc_lib.search_links
 
 -----------------------
 Miscellaneous functions
@@ -116,16 +107,13 @@ Miscellaneous functions
 Url to data
 ~~~~~~~~~~~
 
-.. automodule:: frmc_lib
-	:members: url_to_data
+.. autofunction:: frmc_lib.url_to_data
 
 ~~~~~~~~~~~~~~~~~~~~~~~
 Searching item function
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-.. automodule:: frmc_lib
-	:members: search
-
+.. autofunction:: frmc_lib.search
 
 -----------------------
 Miscellaneous constants
@@ -133,19 +121,13 @@ Miscellaneous constants
 
 .. note:: These constants will probably never be useful to you; nevertheless they are an integral part of the library, so I preferred to indicate them here.
 
-.. automodule:: frmc_lib
-	:members: regex_version
-
 **regex_version:** The regex string used to retrieve the item version (one of the few that are common to almost all items)
 
 .. code-block:: python
 
     regex_version = r'<div class=\"version\">[^<]+<br/>\s*<[^>]+>\s*([^<\n\r]+)\s*</a>'
 
-.. automodule:: frmc_lib
-	:members: timeout
-
-**timeout:** When searching for the html version of a page, this is the maximum time, in seconds, the program waits before raising an exception :class:`requests.exceptions.Timeout`
+**timeout:** When searching for the html version of a page, this is the maximum time, in seconds, the program waits before raising an exception `requests.Timeout <https://docs.python-requests.org/en/master/api/#requests.Timeout>`_.
 
 .. code-block:: python
 
@@ -159,19 +141,19 @@ Some errors
 MissingLibError
 ~~~~~~~~~~~~~~~
 
-.. automodule:: frmc_lib
-	:members: MissingLibError
+.. autoclass:: frmc_lib.MissingLibError
+	:members:
 
 ~~~~~~~~~~~~~~~~~
 ItemNotFoundError
 ~~~~~~~~~~~~~~~~~
 
-.. automodule:: frmc_lib
-	:members: ItemNotFoundError
+.. autoclass:: frmc_lib.ItemNotFoundError
+	:members:
 
 ~~~~~~~~~~~~~~
 WrongDataError
 ~~~~~~~~~~~~~~
 
-.. automodule:: frmc_lib
-	:members: WrongDataError
+.. autoclass:: frmc_lib.WrongDataError
+	:members:

@@ -1,9 +1,3 @@
-.. automodule:: frmc_lib
-
-
-.. role:: python(code)
-	:language: python
-
 ========
 Commands
 ========
@@ -20,8 +14,8 @@ The class
 When you search with the :func:`~frmc_lib.search_cmd` function, you get an :class:`~frmc_lib.Command` object that summarizes all the characteristics of the command.
 The details of this class are explained here: 
 
-.. automodule:: frmc_lib
-	:members: Command
+.. autoclass:: frmc_lib.Command
+	:members:
 
 -------------
 How to search
@@ -30,12 +24,11 @@ How to search
 using main()
 ~~~~~~~~~~~~
 
-.. automodule:: frmc_lib
-	:members: main
+.. autofunction:: frmc_lib.main
 	:noindex:
 
-using search_cmd()
+using search_item()
 ~~~~~~~~~~~~~~~~~~~~~
 
-.. automodule:: frmc_lib
-	:members: search_cmd
+.. autofunction:: frmc_lib.search_item
+	:noindex:

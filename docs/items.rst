@@ -1,6 +1,3 @@
-.. automodule:: frmc_lib
-
-
 .. role:: python(code)
 	:language: python
 
@@ -20,8 +17,8 @@ The class
 When you search with the :func:`~frmc_lib.search_item` function, you get an :class:`~frmc_lib.Item` object that summarizes all the characteristics of the item (or the block).
 The details of this class are explained here: 
 
-.. automodule:: frmc_lib
-	:members: Item
+.. autoclass:: frmc_lib.Item
+	:members:
 
 -------------
 How to search
@@ -30,12 +27,11 @@ How to search
 using main()
 ~~~~~~~~~~~~
 
-.. automodule:: frmc_lib
-	:members: main
+.. autofunction:: frmc_lib.main
 	:noindex:
 
 using search_item()
 ~~~~~~~~~~~~~~~~~~~~~
 
-.. automodule:: frmc_lib
-	:members: search_item
+.. autofunction:: frmc_lib.search_item
+	:noindex:

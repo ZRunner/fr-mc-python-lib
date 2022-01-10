@@ -35,23 +35,19 @@ class Entity():
     Here is a list of all variables accessible after creation:
 
     .. hlist::
-    :columns: 2
+        :columns: 2
 
-    * name
-    * entity_ids
-    * entity_ype
-    * health
-    * attack
-    * xp
-    * biomes
-    * dimensions
-    * version
-    * image
-    * url
-    
-    Parameters
-    ----------
-        diverses All information that will be stored in the class
+        * name
+        * entity_ids
+        * entity_ype
+        * health
+        * attack
+        * xp
+        * biomes
+        * dimensions
+        * version
+        * image
+        * url
 
     .. tip:: Details on each of the information are given in comments in the source code
     """
@@ -74,24 +70,19 @@ class Item():
     Here is a list of all variables accessible after creation:
 
     .. hlist::
-    :columns: 2
+        :columns: 2
 
-    * name
-    * item_ids
-    * stack
-    * creative_tab
-    * damages
-    * durability
-    * tnt_resistance
-    * tool
-    * version
-    * mobs
-    * image
-    * url
-    
-    Parameters
-    ----------
-        diverses All information that will be stored in the class
+        * Name
+        * ID
+        * Stack
+        * CreativeTab
+        * Damage
+        * Strength
+        * Tool
+        * Version
+        * Mobs
+        * Image
+        * Url
 
     .. tip:: Details on each of the information are given in comments in the source code
     """
@@ -115,18 +106,14 @@ class Command():
     Here is a very long list of the immensity of the hundreds of information accessible after creation (yes there are only 4, it's not a bug)
 
     .. hlist::
-    :columns: 1
+        :columns: 1
 
-    * name
-    * syntax
-    * examples
-    * version
-    * url
+        * name
+        * syntax
+        * examples
+        * version
+        * url
     
-    Parameters
-    ----------
-        diverses All information that will be stored in the class
-
     .. tip:: Details on each of the information are given in comments in the source code
     """
     def __init__(self, name, syntax, examples, version, url=None):
@@ -153,10 +140,6 @@ class Advancement():
         * version
         * image
         * url
-
-    Parameters
-    ----------
-        diverses All information that will be stored in the class
 
     .. tip:: Details on each of the information are given in comments in the source code
     """

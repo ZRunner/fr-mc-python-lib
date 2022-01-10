@@ -29,11 +29,11 @@ release = '1.0.2'
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
-import regex
+import re
 intersphinx_mapping = {
-    "python": ("https://docs.python.org/3.6", None),
+    "python": ("https://docs.python.org/3", None),
     "requests": ("http://docs.python-requests.org/en/master", None),
-    "regex": ("https://docs.python.org/3.6/library", None)
+    "re": ("https://docs.python.org/3.6/library/re.html", None)
 }
 
 # -- General configuration ---------------------------------------------------
@@ -50,8 +50,7 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.viewcode",
     "sphinx.ext.napoleon",
-    "sphinxcontrib.asyncio",
-    "sphinx_autodoc_napoleon_typehints",
+    "sphinx_autodoc_typehints",
 ]
 
 # Add any paths that contain templates here, relative to this directory.

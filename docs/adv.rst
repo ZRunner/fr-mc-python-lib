@@ -1,9 +1,3 @@
-.. automodule:: frmc_lib
-
-
-.. role:: python(code)
-	:language: python
-
 ============
 Advancements
 ============
@@ -20,8 +14,8 @@ The class
 When you search with the :func:`~frmc_lib.search_adv` function, you get an :class:`~frmc_lib.Advancement` object that summarizes all the characteristics of the advancement.
 The details of this class are explained here: 
 
-.. automodule:: frmc_lib
-	:members: Advancement
+.. autoclass:: frmc_lib.Advancement
+	:members:
 
 -------------
 How to search
@@ -30,12 +24,11 @@ How to search
 using main()
 ~~~~~~~~~~~~
 
-.. automodule:: frmc_lib
-	:members: main
+.. autofunction:: frmc_lib.main
 	:noindex:
 
-using search_adv()
+using search_item()
 ~~~~~~~~~~~~~~~~~~~~~
 
-.. automodule:: frmc_lib
-	:members: search_adv
+.. autofunction:: frmc_lib.search_item
+	:noindex:
