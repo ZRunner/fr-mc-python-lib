@@ -1,5 +1,6 @@
 
 import requests, re
+from typing import List, Optional, Tuple, Literal
 
 #----- Some useful data -----#
 regex_version = r'<div class=\"version\">[^<]+<br/>\s*<[^>]+>\s*([^<\n\r]+)\s*</a>'
@@ -54,18 +55,18 @@ class Entity():
 
     .. tip:: Details on each of the information are given in comments in the source code
     """
-    def __init__(self,name, entity_ids, entity_ype, health, attack, xp, biomes, sizes, version, image, url=None):
-        self.name = name  # Name of the entity
-        self.entity_ids = entity_ids  # Text id
-        self.entity_ype = entity_ype  # Type of the entity
-        self.health = health  # Health points
-        self.attack = attack  # Attack points
-        self.xp = xp  # XP droped
-        self.biomes = biomes  # Favorites biomes
-        self.sizes = sizes  # Entity 3D sizes (width, length, height)
-        self.version = version  # Game version when adding
-        self.image = image  # Image url
-        self.url = url  # Url of the entity page
+    def __init__(self,name, entity_ids, entity_type, health, attack, xp, biomes, sizes, version, image, url=None):
+        self.name: str = name  # Name of the entity
+        self.entity_ids: List[str] = entity_ids  # Text id
+        self.entity_type: str = entity_type  # Type of the entity
+        self.health: int = health  # Health points
+        self.attack: Optional[float] = attack  # Attack points
+        self.xp: int = xp  # XP droped
+        self.biomes: List[str] = biomes  # Favorites biomes
+        self.sizes: list[float] = sizes  # Entity 3D sizes (width, length, height)
+        self.version: str = version  # Game version when adding
+        self.image: Optional[str] = image  # Image url
+        self.url: str = url  # Url of the entity page
 
 class Item():
     """This class represent an item or a block. Some information can be empty depending on the type of item (weapon, block...).
@@ -81,6 +82,7 @@ class Item():
     * creative_tab
     * damages
     * durability
+    * tnt_resistance
     * tool
     * version
     * mobs
@@ -93,18 +95,19 @@ class Item():
 
     .. tip:: Details on each of the information are given in comments in the source code
     """
-    def __init__(self, name, item_ids, stack_size, tab, damages, durability, tool, version, mobs, image, url=None):
-        self.name = name  # Name of the item
-        self.item_ids = item_ids  # Text id
-        self.stack_size = stack_size  # Size of a stack
-        self.creative_tab = tab  # Tab in creative gamemode
-        self.damages = damages  # Weapon damage
-        self.durability = durability  # Durability
-        self.tool = tool  # Tool able to destroy it
-        self.version = version  # Game version when adding
-        self.mobs = mobs  # List of mobs that can drop this item
-        self.image = image  # Url of an image
-        self.url = url  # Url of the item page
+    def __init__(self, name, item_ids, stack_size, tab, damages, durability, tnt_resistance, tool, version, mobs, image, url=None):
+        self.name: str = name  # Name of the item
+        self.item_ids: List[str] = item_ids  # Text id
+        self.stack_size: Optional[int] = stack_size  # Size of a stack
+        self.creative_tab: Optional[str] = tab  # Tab in creative gamemode
+        self.damages: Optional[float] = damages  # Weapon damage
+        self.durability: Optional[int] = durability  # Durability
+        self.tnt_resistance: Optional[int] = tnt_resistance # Resistance to TNT explosion
+        self.tool: str = tool  # Tool able to destroy it
+        self.version: str = version  # Game version when adding
+        self.mobs: List[str] = mobs  # List of mobs that can drop this item
+        self.image: Optional[str] = image  # Url of an image
+        self.url: str = url  # Url of the item page
 
 class Command():
     """This class represent a command (sometimes also called *cheat*).
@@ -127,11 +130,11 @@ class Command():
     .. tip:: Details on each of the information are given in comments in the source code
     """
     def __init__(self, name, syntax, examples, version, url=None):
-        self.name = name  # Name of the command
-        self.syntax = syntax  # List of parameters, sorted in order of use
-        self.examples = examples  # List of some examples, contained in tuples in the form (syntax, explanation)
-        self.version = version  # Game version when adding
-        self.url = url  # Url of the command page
+        self.name: str = name  # Name of the command
+        self.syntax: List[str] = syntax  # List of parameters, sorted in order of use
+        self.examples: list[Tuple[str, str]] = examples  # List of some examples, contained in tuples in the form (syntax, explanation)
+        self.version: str = version  # Game version when adding
+        self.url: str = url  # Url of the command page
 
 class Advancement():
     """This class represents an advancement, the event that replaces achievements since Minecraft Java Edition 1.12.
@@ -158,16 +161,31 @@ class Advancement():
     .. tip:: Details on each of the information are given in comments in the source code
     """
     def __init__(self, name, adv_id, adv_type, description, parent, children, version, image, url=None):
-        self.name = name  # Name of the advancement
-        self.adv_id = adv_id  # Text identifier
-        self.adv_type = adv_type  # Type of the advancement (Progrès/Objectif)
-        self.description = description  # Description of the advancement (fr)
-        self.parent = parent  # Previous advancement in the Tree structure
-        self.children = children  # List of next advancement(s) in the Tree structure
-        self.version = version  # Game version when adding
-        self.image = image  # Logo of the advancement
-        self.url = url  # Url of the advancement page
+        self.name: str = name  # Name of the advancement
+        self.adv_id: str = adv_id  # Text identifier
+        self.adv_type: Literal["Progrès", "Objectif (Goal)"] = adv_type  # Type of the advancement (Progrès/Objectif)
+        self.description: str = description  # Description of the advancement (fr)
+        self.parent: Optional[str] = parent  # Previous advancement in the Tree structure
+        self.children: List[str] = children  # List of next advancement(s) in the Tree structure
+        self.version: str = version  # Game version when adding
+        self.image: Optional[str] = image  # Logo of the advancement
+        self.url: str = url  # Url of the advancement page
 
+class SearchType:
+    ENTITY = "entité"
+    BLOCK = "bloc"
+    ITEM = "item"
+    POTION = "potion" # NOT IMPLEMENTED
+    ENCHANT = "enchant" # NOT IMPLEMENTED
+    ADVANCEMENT = "progrès"
+    EFFECT = "effet" # NOT IMPLEMENTED
+    SUCCESS = "succès" # NOT IMPLEMENTED
+    COMMAND = "commande"
+
+    @classmethod
+    def as_list(cls) -> Tuple[str, ...]:
+        return (cls.ENTITY, cls.BLOCK, cls.ITEM, cls.POTION, cls.ENCHANT,
+            cls.ADVANCEMENT, cls.EFFECT, cls.SUCCESS, cls.COMMAND)
 
 #----- Useful functions -----#
 def main(name: str, item_type: str):
@@ -180,7 +198,7 @@ def main(name: str, item_type: str):
     name: :class:`str`
         The name of the item to search for
     item_type: :class:`str`
-        The type of item (Entité, Bloc, Item, etc.)
+        The type of item. Use :class:`~SearchType` to make sure to get the right identifier
 
     Return
     ------
@@ -193,22 +211,22 @@ def main(name: str, item_type: str):
             The type of the given item is not available yet, or the given item can't be found
     """
     data = search(name)
-    urls = search_links(data,item_type)
+    urls = search_links(data, item_type)
     if len(urls) == 0:
         raise ItemNotFoundError("This item cannot be found: {} (Type: {})".format(name,item_type))
-    if item_type.lower() in ["bloc","item"]:
+    if item_type.lower() in {SearchType.BLOCK, SearchType.ITEM}:
         item = search_item(url=urls[0])
-    elif item_type.lower() == "entité":
+    elif item_type.lower() == SearchType.ENTITY:
         item = search_entity(url=urls[0])
-    elif item_type.lower() == "commande":
+    elif item_type.lower() == SearchType.COMMAND:
         item = search_cmd(url=urls[0])
-    elif item_type.lower() == "progrès":
+    elif item_type.lower() == SearchType.ADVANCEMENT:
         item = search_adv(url=urls[0])
     else:
         raise ItemNotFoundError("This item type is not available: {}".format(item_type))
     return item
 
-def url_to_data(url):
+def url_to_data(url: str):
     """This function allows you to retrieve the source code of a web page, from its url address. \
     You just have to give the url as parameter to receive a string containing the html code. 
 
@@ -240,7 +258,7 @@ def url_to_data(url):
 
 
 #----- Searching functions -----#
-def search(item):
+def search(item: str):
     """This function returns the source code of the search page, initialized with a string containing the query. 
 
     Parameters
@@ -264,7 +282,7 @@ def search(item):
     p = url_to_data(p)
     return p
 
-def search_links(html: str, result_type=None, limit: int=1):
+def search_links(html: str, result_type: str=None, limit: int=1):
     """This function allows you to find a certain number of links to item records from the \
     html code of the search page. For example if you want to get the url addresses \
     of all the swords, you have to give in arguments the code of the page \
@@ -276,7 +294,7 @@ def search_links(html: str, result_type=None, limit: int=1):
     html: :class:`str`
         The html string of the search page
     result_type: :class:`str`
-        The type of item to find (Entité, Bloc, Item, Potion, Enchant, Progress, Effect, Success, Command), insensitive case. result_type=None admits all types
+        The type of item to find. Use the :class:`~SearchType` to make sure to use the right one. result_type=None admits all types
     limit: :class:`int`
         The maximum number of links to return
 
@@ -296,7 +314,7 @@ def search_links(html: str, result_type=None, limit: int=1):
     if result_type is not None and not isinstance(html, str) and not isinstance(result_type, str) and not isinstance(limit, int):
         raise TypeError("One of these arguments is not in the right type")
     if result_type is not None:
-        if result_type.lower() not in ["entité","bloc", "item", "potion", "enchant", "progrès", "effet", "succès", "commande"]:
+        if result_type not in SearchType.as_list():
             raise ValueError("The given type is not valid : {}".format(result_type))
     if limit < 1:
         raise ValueError("The limit must be strictly positive!")
@@ -308,7 +326,7 @@ def search_links(html: str, result_type=None, limit: int=1):
         return links[limit:]
     else:
         for e, m in enumerate(matches):
-            if m.lower() == result_type.lower() and len(results1) < limit:
+            if m.lower() == result_type and len(results1) < limit:
                 results1.append("https://fr-minecraft.net/"+links[e])
     for i in results1:
         if not i in results2:
@@ -353,14 +371,18 @@ def search_entity(html: str=None, url: str=None):
     except AttributeError:
         img =  None
         pass
-    #-- PV/PA --#
-    matches = re.finditer(r"<u>(.+)</u>(?:[^>]+)><img[^>]+title=\"([^\"]+)",html,re.MULTILINE)
-    if matches is not None:
-        for match in matches:
-            if match.group(1)=="Points de vie :":
-                health = match.group(2)
-            elif match.group(1)=="Points d'attaque :":
-                attack = match.group(2)
+    #-- Health --#
+    try:
+        health = re.search(r"<u>Points? de vie :</u>(?:[^>]+)><img[^>]+title=\"(\d+) points?\"", html, re.MULTILINE).group(1)
+        health = int(health)
+    except AttributeError:
+        health = 0
+    #-- Attack --#
+    try:
+        attack = re.search(r"<u>Points? d'attaque :</u>(?:[^>]+)><img[^>]+title=\"(\d+(?:\.\d+)?) points?\"", html, re.MULTILINE).group(1)
+        attack = float(attack)
+    except AttributeError:
+        attack = None
     #-- ID --#
     entity_ids = list()
     try:
@@ -376,7 +398,7 @@ def search_entity(html: str=None, url: str=None):
         pass
     #-- Dropped xp --#
     try:
-        xp = re.search(r"<u>Experience :</u> <img [^>]+> (\d)<br/>",html).group(1)
+        xp = int(re.search(r"<u>Experience :</u> <img [^>]+> (\d)<br/>",html).group(1))
     except AttributeError:
         xp = None
         pass
@@ -397,17 +419,17 @@ def search_entity(html: str=None, url: str=None):
         size = (0,0,0)
     #-- Version --#
     try:
-        version = re.search(regex_version,html).group(1)
+        version = re.search(regex_version,html).group(1).strip()
     except AttributeError:
         version = None
     #-- Name --#
     name = re.search(r"<h3>(.+)<span>",html,re.MULTILINE)
     if name is not None:
-        name = name.group(1)
+        name = name.group(1).strip()
     else:
         name = None
     #-- Final entity --#
-    result = Entity(name=name, entity_ids="\n".join(entity_ids), entity_ype=entity_type, health=health,
+    result = Entity(name=name, entity_ids="\n".join(entity_ids), entity_type=entity_type, health=health,
                 attack=attack, xp=xp, biomes=biomes, sizes=size, version=version, image=img)
     if url is not None:
         result.url = url
@@ -457,7 +479,7 @@ def search_item(html: str=None, url: str=None):
     #-- Stack --#
     stacks = re.search(r"<p>Stackable par (\d+) </p></div>",html,re.MULTILINE)
     if stacks is not None:
-        stacks = stacks.group(1)
+        stacks = int(stacks.group(1))
     #-- Tab --#
     tab = re.search(r"<p class=\"onglet-crea\">Onglet Créatif : <span><img[^>]+></span>([^<]+)</p>",html,re.MULTILINE)
     if tab is not None:
@@ -467,21 +489,24 @@ def search_item(html: str=None, url: str=None):
     #-- Damage --#
     dmg = re.search(r"Cette arme inflige des dégats: <span class=\"healthbar\"><img src=\"[^\"]+\" style=\"[^\"]+\" alt=\"([\d.]+) [^>]+>",html,re.MULTILINE)
     if dmg is not None:
-        dmg = dmg.group(1)
-    #-- Strength --#
+        dmg = float(dmg.group(1))
+    #-- Durability --#
     dura = re.search(r"<p>Solidité : Cet objet est utilisable <strong style=\"color: green;\">([\d]+)</strong> fois.</p>",html,re.MULTILINE)
     if dura is not None:
-        dura = dura.group(1)
+        dura = int(dura.group(1))
+    #-- TNT resistance --#
+    tnt = re.search(r"<p><span>Résistance à la TNT :</span> ?(\d+)</p>", html, re.MULTILINE)
+    if tnt is not None:
+        tnt = int(tnt.group(1))
     #-- Tool --#
     tool = re.search(r"<a rel=\"popup\" href=\"[^\"]+\" onclick=\"[^\"]+\"  class=\"content_popup_link \">([^>]+)</a></span><br/>",html,re.MULTILINE)
     if tool is not None:
         tool = tool.group(1)
     #-- Version --#
     try:
-        #Vs = re.search(r"<div class=\"version\">[^<]+<br/><[^>]+>([^<]+)</a>",data).group(1)
-        version = re.search(regex_version,html).group(1)
+        version = re.search(regex_version,html).group(1).strip()
     except AttributeError:
-        version =""
+        version = ""
     #-- Mobs --#
     mobs = list()
     try:
@@ -495,7 +520,8 @@ def search_item(html: str=None, url: str=None):
     if image is not None:
         image = "https://fr-minecraft.net/"+image.group(1)
     #-- Final entity --#
-    result = Item(name=name,item_ids=item_ids,stack_size=stacks,tab=tab,damages=dmg,durability=dura,tool=tool,version=version,mobs=mobs,image=image)
+    result = Item(name=name, item_ids=item_ids, stack_size=stacks, tab=tab, damages=dmg,
+                  durability=dura, tnt_resistance=tnt, tool=tool, version=version, mobs=mobs, image=image)
     if url is not None:
         result.url = url
     return result
@@ -550,19 +576,24 @@ def search_cmd(html: str=None, url: str=None):
         s = s.replace("&lt;","<").replace("&gt;",">")
         s = s.split("         ")
         for i in s:
-            if len(i)>0:
-                syntaxes.append(i)
+            if len(i) > 0:
+                syntaxes.append(i.strip())
     else:
         raise WrongDataError("Unable to find the syntax of this command")
     #-- Examples --#
     examples = list()
-    for m in re.finditer(r"<textarea class=\"input-exemple\">([^<]+)</textarea><br/>([^<]+)(?:<a[^>]+>([^<]+))?",html):
+    for m in re.finditer(r"<textarea class=\"input-exemple\">([^<]+)</textarea><br/>([^<]+)(?:<a[^>]+>([^<]+))?", html):
         syn = m.group(1)
         ex = m.group(2)+m.group(3) if m.group(3)!=None else m.group(2)
         examples.append((syn,ex))
+    #-- Derived commands --#
+    # DOES NOT WORK FOR SOME REASONS
+    # derived = list()
+    # for m in re.finditer(r"<h\d>Commm?ande\(s\) dérivée\(s\) :</h\d>(<[^>]+>)*?(/[^<]+)", html):
+    #     derived.append(m.group(1).strip())
     #-- Version --#
     try:
-        version = re.search(regex_version,html).group(1)
+        version = re.search(regex_version,html).group(1).strip()
     except AttributeError:
         version = None
     #-- Final command --#
@@ -648,7 +679,7 @@ def search_adv(html: str=None, url: str=None):
         image = None
     #-- Version --#
     try:
-        version = re.search(regex_version,html).group(1)
+        version = re.search(regex_version,html).group(1).strip()
     except AttributeError:
         version = None
     result = Advancement(name=names,adv_id=ids,adv_type=adv_type,description=actions,parent=parent,children=children,image=image,version=version)
