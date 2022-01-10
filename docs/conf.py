@@ -33,7 +33,7 @@ import re
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
     "requests": ("http://docs.python-requests.org/en/master", None),
-    "re": ("https://docs.python.org/3.6/library/re.html", None)
+    "re": ("https://docs.python.org/3.8/library/re.html", None)
 }
 
 # -- General configuration ---------------------------------------------------
